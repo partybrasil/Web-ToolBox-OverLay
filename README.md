@@ -52,4 +52,4 @@ El script incluye las variables `@updateURL` y `@downloadURL` apuntando a esta r
 
 Distribuido bajo la **[Licencia MIT](LICENSE)**. 
 
-Creado por Zghel Jghen & Gemini.
+Diseñado y desarrollado con ❤️ por **Miguel Diaz (Party)** para toda la comunidad.

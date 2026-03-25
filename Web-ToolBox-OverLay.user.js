@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.2
 // @description  Herramienta de accesibilidad total premium, gratuita y personalizable. Menú flotante asilado mediante Shadow DOM.
-// @author       Miguel Diaz
+// @author       Miguel Diaz (Party)
 // @match        *://*/*
 // @grant        GM_setValue
 // @grant        GM_getValue
