@@ -17,6 +17,7 @@ Una alternativa **gratuita, potente y de código abierto** a las herramientas de
 * 👁️ **Herramientas Visuales:** Invertir colores, forzar escala de grises, contraste súper alto, ocultar imágenes y medios.
 * 📖 **Lectura Mejorada:** Tipografía *OpenDyslexic* bajo demanda, zoom escalonado enfocado a lectura y resaltado exagerado de enlaces.
 * ⚡ **Navegación:** Activa un cursor gigante de modo global y bloquea las animaciones o transiciones intrusivas (ideal para cinetosis / mareo digital).
+* 🧪 **X-Ray Matrix Avanzado:** Modos Dirigido y Full-Scan, filtros por tipo de componente, Heatmap DOM, Listener-Map y exportación de reporte JSON técnico.
 * 🚫 **Cero Dependencias Externa:** Todo está integrado. Cero bibliotecas subidas de NPM, cero WebFonts externas (fuente generada en variables SVG), sin rastreadores y funciona enteramente offline.
 
 ---
@@ -30,7 +31,27 @@ Necesitas un manejador de scripts de usuario (Userscripts) en tu navegador.
 3. Haz clic en el botón verde **Instalar Userscript**.
 4. ¡Listo! Tampermonkey te pedirá confirmación. Una vez aceptado, abre cualquier página web para ver el botón flotante.
 
-*(Si prefieres no usar la página web, puedes pulsar [AQUÍ](https://raw.githubusercontent.com/partybrasil/Web-ToolBox-OverLay/main/Web-ToolBox-OverLay.user.js) o directamente en el archivo `Web-ToolBox-OverLay.user.js` dentro del repositorio).*
+*(Si prefieres no usar la página web, puedes pulsar [AQUÍ](https://raw.githubusercontent.com/partybrasil/Web-ToolBox-OverLay/master/Web-ToolBox-OverLay.user.js) o directamente en el archivo `Web-ToolBox-OverLay.user.js` dentro del repositorio).*
+
+---
+
+## 🧪 X-Ray Matrix (Guía Rápida)
+
+X-Ray permite inspección visual del DOM en tiempo real con estética verde translúcida tipo matrix, sin dependencias externas.
+
+1. **Dirigido:** sigue el puntero y muestra información del nodo bajo foco (tag, jerarquía, atributos, señales de interacción, snippets de fuente).
+2. **Full-Scan:** resalta toda la estructura de la web de golpe para análisis de layout.
+3. **Modos:**
+	- `Estructura` (jerarquía y métricas del nodo)
+	- `Fuente` (fragmento `outerHTML` saneado)
+	- `Scripts` (resumen técnico: inline, externos, module, json-ld, iframes)
+4. **Filtros de foco:** `Todo`, `UI`, `Forms`, `Media`.
+5. **Escaneo avanzado:**
+	- `Heatmap`: intensidad por profundidad + densidad del DOM.
+	- `Listener-Map`: resalta nodos con señales de eventos/interacción.
+	- `Export JSON`: descarga un reporte técnico con métricas y top tags.
+
+**Nota:** X-Ray está orientado a auditoría visual y estructural del DOM público. No está diseñado para extracción de datos sensibles.
 
 ---
 

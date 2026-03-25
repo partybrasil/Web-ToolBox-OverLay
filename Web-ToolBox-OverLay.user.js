@@ -29,6 +29,34 @@
             .wtb-xray-full { background-color: rgba(0, 24, 0, 0.08) !important; }
             .wtb-xray-full * { outline: 1px solid rgba(57, 255, 20, 0.45) !important; outline-offset: -1px !important; }
             .wtb-xray-full img, .wtb-xray-full video, .wtb-xray-full canvas, .wtb-xray-full svg { filter: grayscale(100%) sepia(60%) hue-rotate(50deg) saturate(180%) brightness(1.05) !important; }
+            .wtb-xray-full.wtb-xray-filter-interactive *,
+            .wtb-xray-full.wtb-xray-filter-forms *,
+            .wtb-xray-full.wtb-xray-filter-media * { outline-color: transparent !important; }
+            .wtb-xray-full.wtb-xray-filter-interactive a,
+            .wtb-xray-full.wtb-xray-filter-interactive button,
+            .wtb-xray-full.wtb-xray-filter-interactive input,
+            .wtb-xray-full.wtb-xray-filter-interactive select,
+            .wtb-xray-full.wtb-xray-filter-interactive textarea,
+            .wtb-xray-full.wtb-xray-filter-interactive summary,
+            .wtb-xray-full.wtb-xray-filter-interactive [role="button"],
+            .wtb-xray-full.wtb-xray-filter-interactive [onclick],
+            .wtb-xray-full.wtb-xray-filter-interactive [tabindex] { outline: 2px solid rgba(57, 255, 20, 0.95) !important; background-color: rgba(57, 255, 20, 0.07) !important; }
+            .wtb-xray-full.wtb-xray-filter-forms form,
+            .wtb-xray-full.wtb-xray-filter-forms input,
+            .wtb-xray-full.wtb-xray-filter-forms select,
+            .wtb-xray-full.wtb-xray-filter-forms textarea,
+            .wtb-xray-full.wtb-xray-filter-forms fieldset,
+            .wtb-xray-full.wtb-xray-filter-forms label,
+            .wtb-xray-full.wtb-xray-filter-forms button { outline: 2px solid rgba(57, 255, 20, 0.95) !important; background-color: rgba(57, 255, 20, 0.07) !important; }
+            .wtb-xray-full.wtb-xray-filter-media img,
+            .wtb-xray-full.wtb-xray-filter-media video,
+            .wtb-xray-full.wtb-xray-filter-media audio,
+            .wtb-xray-full.wtb-xray-filter-media canvas,
+            .wtb-xray-full.wtb-xray-filter-media svg,
+            .wtb-xray-full.wtb-xray-filter-media picture,
+            .wtb-xray-full.wtb-xray-filter-media iframe { outline: 2px solid rgba(57, 255, 20, 0.95) !important; background-color: rgba(57, 255, 20, 0.07) !important; }
+            .wtb-xray-heatmap [data-wtb-xray-heat="1"] { outline: 2px solid var(--wtb-xray-heat, rgba(57, 255, 20, 0.9)) !important; background-color: var(--wtb-xray-fill, rgba(57, 255, 20, 0.08)) !important; }
+            .wtb-xray-listener-map [data-wtb-xray-listener="1"] { outline: 2px dashed rgba(0, 255, 157, 0.95) !important; background-color: rgba(0, 255, 157, 0.08) !important; }
         `;
         document.documentElement.appendChild(style);
     };
@@ -47,6 +75,23 @@
             #floating-icon svg { width: 60%; height: 60%; pointer-events: none; }
             
             #main-panel { display: none; position: absolute; bottom: calc(${GM_getValue('iconSize', 48)}px + 10px); right: 0; width: 320px; max-height: 80vh; background: var(--bg); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); padding: 20px; overflow-y: auto; color: #333; }
+            #xray-workbench { display: none; position: fixed; right: 16px; bottom: 16px; width: min(420px, calc(100vw - 20px)); max-height: min(86vh, 760px); border-radius: 16px; border: 1px solid rgba(57, 255, 20, 0.45); background: linear-gradient(180deg, rgba(4, 20, 8, 0.96), rgba(7, 30, 12, 0.95)); box-shadow: 0 0 0 1px rgba(25, 92, 38, 0.6), 0 14px 44px rgba(0, 0, 0, 0.6), 0 0 34px rgba(32, 170, 66, 0.32); padding: 14px; overflow-y: auto; color: #c9ffd4; z-index: 2147483647; }
+            #xray-workbench.show { animation: xrayWorkbenchIn 0.25s ease-out; }
+            #xray-workbench .header h3 { color: #b8ffb8; }
+            #xray-workbench .section-title { color: #8acf98; border-bottom-color: rgba(57, 255, 20, 0.22); }
+            #xray-workbench .btn { background: rgba(20, 40, 24, 0.8); border-color: rgba(57, 255, 20, 0.24); color: #b7ffd0; }
+            #xray-workbench .btn:hover { background: rgba(26, 58, 33, 0.95); border-color: rgba(57, 255, 20, 0.55); }
+            #xray-workbench .btn.active { background: rgba(28, 134, 58, 0.82); border-color: rgba(77, 255, 77, 0.95); color: #fff; }
+            .xray-launch-btn { width: 100%; margin-bottom: 18px; background: linear-gradient(135deg, #0f6525, #1fa44a); color: #f4fff7; border: 1px solid #1cd05b; box-shadow: 0 0 12px rgba(35, 175, 75, 0.35); }
+            .xray-launch-btn:hover { transform: translateY(-1px) scale(1.01); }
+            .xray-header-actions { display: flex; gap: 8px; align-items: center; }
+            .xray-nav-btn { border: 1px solid rgba(57, 255, 20, 0.5); background: rgba(15, 35, 18, 0.92); color: #9cffad; border-radius: 8px; font-size: 12px; padding: 6px 8px; cursor: pointer; }
+            .xray-nav-btn:hover { background: rgba(24, 52, 30, 0.96); }
+
+            @keyframes xrayWorkbenchIn {
+                from { opacity: 0; transform: translateY(10px) scale(0.985); }
+                to { opacity: 1; transform: translateY(0) scale(1); }
+            }
             
             /* Scrollbar styling for panel */
             #main-panel::-webkit-scrollbar { width: 8px; }
@@ -78,10 +123,16 @@
             #xray-label { position: fixed; pointer-events: none; z-index: 2147483646; display: none; padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(57, 255, 20, 0.8); background: rgba(3, 18, 3, 0.94); color: #95ff95; font-size: 12px; font-weight: 700; max-width: min(70vw, 420px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
             .xray-panel-info { background: #071307; color: #83ff9d; border: 1px solid #1d6a2b; border-radius: 10px; font-size: 12px; line-height: 1.4; padding: 10px; margin-bottom: 20px; min-height: 58px; }
             .xray-panel-info strong { color: #b5ffb5; }
+            .xray-subtitle { font-size: 11px; color: #4f8e5c; text-transform: uppercase; margin: -8px 0 8px; font-weight: 700; }
+            .xray-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+            .xray-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+            .xray-mini { font-size: 11px; padding: 8px 6px; }
+            code { display: inline-block; margin-top: 6px; font-size: 11px; color: #8effaf; white-space: pre-wrap; word-break: break-word; }
             
             /* Responsive adjust for mobile */
             @media (max-width: 400px) {
                 #main-panel { width: 280px; position: fixed; bottom: 80px; right: 10px; left: auto; }
+                #xray-workbench { right: 8px; bottom: 8px; width: calc(100vw - 16px); }
             }
         `;
         shadow.appendChild(style);
@@ -124,13 +175,7 @@
                 </div>
 
                 <div class="section-title">X-Ray Matrix</div>
-                <div class="grid">
-                    <button class="btn" id="btn-xray-directed" title="Inspección en vivo sin click siguiendo el puntero">🧪 Dirigido</button>
-                    <button class="btn" id="btn-xray-full" title="Escaneo total con contornos X-Ray en toda la página">🟩 Full-Scan</button>
-                </div>
-                <div class="xray-panel-info" id="xray-info">
-                    <strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.
-                </div>
+                <button class="btn xray-launch-btn" id="btn-open-xray" title="Abrir panel flotante X-Ray Suite">🧬 Abrir X-Ray Suite</button>
                 
                 <div class="section-title">Ajustes del Menú ⚙️</div>
                 <div class="slider-group">
@@ -140,6 +185,42 @@
                 
                 <button class="reset-btn" onclick="location.reload()">🔄 Reestablecer Todo</button>
             </div>
+            <div id="xray-workbench">
+                <div class="header">
+                    <h3>X-Ray Suite</h3>
+                    <div class="xray-header-actions">
+                        <button class="xray-nav-btn" id="btn-xray-back" title="Volver al menú principal">↩ Volver</button>
+                        <button class="xray-nav-btn" id="btn-xray-close" title="Cerrar panel X-Ray">✕</button>
+                    </div>
+                </div>
+                <div class="section-title">X-Ray Matrix</div>
+                <div class="grid">
+                    <button class="btn" id="btn-xray-directed" title="Inspección en vivo sin click siguiendo el puntero">🧪 Dirigido</button>
+                    <button class="btn" id="btn-xray-full" title="Escaneo total con contornos X-Ray en toda la página">🟩 Full-Scan</button>
+                </div>
+                <div class="xray-subtitle">Modo de análisis</div>
+                <div class="xray-grid-3">
+                    <button class="btn xray-mini active" id="btn-xray-mode-structure" title="Análisis de estructura visual y jerarquía">🧬 Estructura</button>
+                    <button class="btn xray-mini" id="btn-xray-mode-source" title="Muestra snippet de código fuente del nodo actual">📄 Fuente</button>
+                    <button class="btn xray-mini" id="btn-xray-mode-scripts" title="Resumen de scripts, iframes y metadatos">📜 Scripts</button>
+                </div>
+                <div class="xray-subtitle">Filtro de foco</div>
+                <div class="xray-grid-4">
+                    <button class="btn xray-mini active" id="btn-xray-filter-all" title="Escanea todos los nodos">🌐 Todo</button>
+                    <button class="btn xray-mini" id="btn-xray-filter-interactive" title="Solo elementos interactivos">🖱️ UI</button>
+                    <button class="btn xray-mini" id="btn-xray-filter-forms" title="Solo formularios y campos">🧾 Forms</button>
+                    <button class="btn xray-mini" id="btn-xray-filter-media" title="Solo media e iframes">🖼️ Media</button>
+                </div>
+                <div class="xray-subtitle">Escaneo avanzado</div>
+                <div class="xray-grid-3">
+                    <button class="btn xray-mini" id="btn-xray-heatmap" title="Mapa térmico por densidad y profundidad del DOM">♨️ Heatmap</button>
+                    <button class="btn xray-mini" id="btn-xray-listeners" title="Resalta nodos con señales de interacción/eventos">🎯 Listener-Map</button>
+                    <button class="btn xray-mini" id="btn-xray-export" title="Exportar reporte técnico X-Ray en JSON">💾 Export JSON</button>
+                </div>
+                <div class="xray-panel-info" id="xray-info">
+                    <strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.
+                </div>
+            </div>
             <div id="xray-lens"></div>
             <div id="xray-label"></div>
         `;
@@ -147,20 +228,55 @@
 
         const icon = shadow.getElementById('floating-icon');
         const panel = shadow.getElementById('main-panel');
+        const xrayWorkbench = shadow.getElementById('xray-workbench');
         const html = document.documentElement;
+        const openXrayBtn = shadow.getElementById('btn-open-xray');
+        const xrayBackBtn = shadow.getElementById('btn-xray-back');
+        const xrayCloseBtn = shadow.getElementById('btn-xray-close');
         const xrayLens = shadow.getElementById('xray-lens');
         const xrayLabel = shadow.getElementById('xray-label');
         const xrayInfo = shadow.getElementById('xray-info');
         const xrayDirectedBtn = shadow.getElementById('btn-xray-directed');
         const xrayFullBtn = shadow.getElementById('btn-xray-full');
+        const xrayModeStructureBtn = shadow.getElementById('btn-xray-mode-structure');
+        const xrayModeSourceBtn = shadow.getElementById('btn-xray-mode-source');
+        const xrayModeScriptsBtn = shadow.getElementById('btn-xray-mode-scripts');
+        const xrayFilterAllBtn = shadow.getElementById('btn-xray-filter-all');
+        const xrayFilterInteractiveBtn = shadow.getElementById('btn-xray-filter-interactive');
+        const xrayFilterFormsBtn = shadow.getElementById('btn-xray-filter-forms');
+        const xrayFilterMediaBtn = shadow.getElementById('btn-xray-filter-media');
+        const xrayHeatmapBtn = shadow.getElementById('btn-xray-heatmap');
+        const xrayListenersBtn = shadow.getElementById('btn-xray-listeners');
+        const xrayExportBtn = shadow.getElementById('btn-xray-export');
 
         // Toggle Panel
-        icon.addEventListener('click', () => { 
+        icon.addEventListener('click', () => {
+            if (xrayWorkbench.style.display === 'block') {
+                xrayWorkbench.style.display = 'none';
+            }
             panel.style.display = panel.style.display === 'block' ? 'none' : 'block'; 
         });
         shadow.querySelector('.close-btn').addEventListener('click', () => { 
             panel.style.display = 'none'; 
         });
+
+        const openXrayWorkbench = () => {
+            panel.style.display = 'none';
+            xrayWorkbench.style.display = 'block';
+            xrayWorkbench.classList.remove('show');
+            window.requestAnimationFrame(() => xrayWorkbench.classList.add('show'));
+        };
+
+        const closeXrayWorkbench = (returnMainPanel) => {
+            xrayWorkbench.style.display = 'none';
+            if (returnMainPanel) {
+                panel.style.display = 'block';
+            }
+        };
+
+        openXrayBtn.addEventListener('click', openXrayWorkbench);
+        xrayBackBtn.addEventListener('click', () => closeXrayWorkbench(true));
+        xrayCloseBtn.addEventListener('click', () => closeXrayWorkbench(false));
 
         // Toggle Buttons Helper
         const toggleClass = (id, className) => {
@@ -178,12 +294,209 @@
         toggleClass('btn-images', 'wtb-hide-images');
         toggleClass('btn-anim', 'wtb-stop-animations');
 
-        const xrayState = { directed: false, full: false };
+        const xrayState = { directed: false, full: false, mode: 'structure', filter: 'all', heatmap: false, listeners: false };
         let pointerX = 0;
         let pointerY = 0;
         let xrayTickScheduled = false;
 
         const clamp = (value, min, max) => Math.max(min, Math.min(value, max));
+
+        const escapeHtml = (str) => String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+
+        const setXrayInfo = (htmlString) => {
+            xrayInfo.innerHTML = htmlString;
+        };
+
+        const matchesFilter = (el) => {
+            if (!el || !el.matches) return false;
+            if (xrayState.filter === 'all') return true;
+            if (xrayState.filter === 'interactive') {
+                return el.matches('a,button,input,select,textarea,summary,[role="button"],[onclick],[tabindex]');
+            }
+            if (xrayState.filter === 'forms') {
+                return el.matches('form,input,select,textarea,label,fieldset,legend,button,option');
+            }
+            if (xrayState.filter === 'media') {
+                return el.matches('img,video,audio,canvas,svg,picture,iframe,source');
+            }
+            return true;
+        };
+
+        const findTargetByFilter = (startX, startY) => {
+            const stack = document.elementsFromPoint(startX, startY);
+            const filtered = stack.find((item) => item !== host && item !== document.documentElement && matchesFilter(item));
+            if (filtered) return filtered;
+            return stack.find((item) => item !== host && item !== document.documentElement) || null;
+        };
+
+        const getSourceSnippet = (el) => {
+            const source = (el.outerHTML || '')
+                .replace(/\s+/g, ' ')
+                .trim();
+            return source.slice(0, 220) + (source.length > 220 ? ' ...' : '');
+        };
+
+        const getScriptsStats = () => {
+            const scripts = Array.from(document.scripts);
+            const inline = scripts.filter((script) => !script.src).length;
+            const external = scripts.filter((script) => script.src).length;
+            const modules = scripts.filter((script) => script.type === 'module').length;
+            const jsonLd = scripts.filter((script) => script.type === 'application/ld+json').length;
+            const iframes = document.querySelectorAll('iframe').length;
+            const metas = document.querySelectorAll('meta').length;
+            return { inline, external, modules, jsonLd, iframes, metas };
+        };
+
+        const getListenerSignals = (el) => {
+            if (!el || !el.attributes) return { count: 0, detail: 'none' };
+            const inlineEvents = Array.from(el.attributes)
+                .map((attr) => attr.name)
+                .filter((name) => /^on[a-z]+/i.test(name));
+            const directEvents = ['onclick', 'onchange', 'oninput', 'onsubmit', 'onkeydown', 'onkeyup']
+                .filter((prop) => typeof el[prop] === 'function');
+            const roleBased = el.matches && el.matches('[role="button"],[role="link"],[tabindex]') ? ['role/tabindex'] : [];
+            const detailList = [...new Set([...inlineEvents, ...directEvents, ...roleBased])];
+            return { count: detailList.length, detail: detailList.slice(0, 5).join(', ') || 'none' };
+        };
+
+        const clearHeatmap = () => {
+            document.querySelectorAll('[data-wtb-xray-heat="1"]').forEach((node) => {
+                node.removeAttribute('data-wtb-xray-heat');
+                node.style.removeProperty('--wtb-xray-heat');
+                node.style.removeProperty('--wtb-xray-fill');
+            });
+            html.classList.remove('wtb-xray-heatmap');
+        };
+
+        const applyHeatmap = () => {
+            clearHeatmap();
+            const nodes = Array.from(document.querySelectorAll('body *'));
+            nodes.forEach((node) => {
+                if (node === host || host.contains(node)) return;
+                let depth = 0;
+                let current = node;
+                while (current && current.parentElement) {
+                    depth += 1;
+                    current = current.parentElement;
+                }
+                const density = Math.min(node.children ? node.children.length : 0, 30);
+                const score = clamp((depth / 22) + (density / 30), 0, 1.4);
+                const heat = clamp(Math.round(90 + (score * 110)), 90, 220);
+                const alpha = (0.06 + (score * 0.09)).toFixed(3);
+                node.setAttribute('data-wtb-xray-heat', '1');
+                node.style.setProperty('--wtb-xray-heat', `rgba(40, ${heat}, 90, 0.95)`);
+                node.style.setProperty('--wtb-xray-fill', `rgba(20, ${Math.round(heat * 0.8)}, 60, ${alpha})`);
+            });
+            html.classList.add('wtb-xray-heatmap');
+        };
+
+        const clearListenerMap = () => {
+            document.querySelectorAll('[data-wtb-xray-listener="1"]').forEach((node) => {
+                node.removeAttribute('data-wtb-xray-listener');
+            });
+            html.classList.remove('wtb-xray-listener-map');
+        };
+
+        const applyListenerMap = () => {
+            clearListenerMap();
+            const nodes = Array.from(document.querySelectorAll('body *'));
+            let flagged = 0;
+            nodes.forEach((node) => {
+                if (node === host || host.contains(node)) return;
+                const signal = getListenerSignals(node);
+                if (signal.count > 0) {
+                    node.setAttribute('data-wtb-xray-listener', '1');
+                    flagged += 1;
+                }
+            });
+            html.classList.add('wtb-xray-listener-map');
+            return flagged;
+        };
+
+        const getTopTags = () => {
+            const counts = {};
+            document.querySelectorAll('body *').forEach((el) => {
+                const tag = el.tagName.toLowerCase();
+                counts[tag] = (counts[tag] || 0) + 1;
+            });
+            return Object.entries(counts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10)
+                .map(([tag, count]) => ({ tag, count }));
+        };
+
+        const buildXrayReport = () => {
+            const stats = getScriptsStats();
+            const listenerCandidates = Array.from(document.querySelectorAll('body *'))
+                .reduce((acc, el) => acc + (getListenerSignals(el).count > 0 ? 1 : 0), 0);
+
+            return {
+                project: 'Web-ToolBox-OverLay',
+                reportType: 'X-Ray',
+                generatedAt: new Date().toISOString(),
+                page: {
+                    title: document.title,
+                    url: window.location.href,
+                    lang: document.documentElement.lang || 'n/a'
+                },
+                xrayState: {
+                    mode: xrayState.mode,
+                    filter: xrayState.filter,
+                    directed: xrayState.directed,
+                    full: xrayState.full,
+                    heatmap: xrayState.heatmap,
+                    listenersMap: xrayState.listeners
+                },
+                metrics: {
+                    totalNodes: document.querySelectorAll('*').length,
+                    interactiveNodes: document.querySelectorAll('a,button,input,select,textarea,[role="button"],[tabindex]').length,
+                    formsNodes: document.querySelectorAll('form,input,select,textarea,label,fieldset').length,
+                    mediaNodes: document.querySelectorAll('img,video,audio,canvas,svg,picture,iframe').length,
+                    listenerCandidates,
+                    scripts: stats
+                },
+                topTags: getTopTags()
+            };
+        };
+
+        const exportXrayReport = () => {
+            const report = buildXrayReport();
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            const safeHost = window.location.hostname.replace(/[^a-z0-9.-]/gi, '_');
+            anchor.href = url;
+            anchor.download = `wtb-xray-report-${safeHost}-${Date.now()}.json`;
+            document.body.appendChild(anchor);
+            anchor.click();
+            anchor.remove();
+            URL.revokeObjectURL(url);
+        };
+
+        const applyXrayFilterClass = () => {
+            html.classList.remove('wtb-xray-filter-interactive', 'wtb-xray-filter-forms', 'wtb-xray-filter-media');
+            if (xrayState.filter === 'interactive') html.classList.add('wtb-xray-filter-interactive');
+            if (xrayState.filter === 'forms') html.classList.add('wtb-xray-filter-forms');
+            if (xrayState.filter === 'media') html.classList.add('wtb-xray-filter-media');
+        };
+
+        const updateModeButtons = () => {
+            xrayModeStructureBtn.classList.toggle('active', xrayState.mode === 'structure');
+            xrayModeSourceBtn.classList.toggle('active', xrayState.mode === 'source');
+            xrayModeScriptsBtn.classList.toggle('active', xrayState.mode === 'scripts');
+        };
+
+        const updateFilterButtons = () => {
+            xrayFilterAllBtn.classList.toggle('active', xrayState.filter === 'all');
+            xrayFilterInteractiveBtn.classList.toggle('active', xrayState.filter === 'interactive');
+            xrayFilterFormsBtn.classList.toggle('active', xrayState.filter === 'forms');
+            xrayFilterMediaBtn.classList.toggle('active', xrayState.filter === 'media');
+        };
 
         const describeElement = (el) => {
             const tag = el.tagName ? el.tagName.toLowerCase() : 'desconocido';
@@ -194,10 +507,19 @@
             const childCount = el.children ? el.children.length : 0;
             const scriptsTotal = document.scripts.length;
             const externalScripts = Array.from(document.scripts).filter((script) => script.src).length;
+            const depth = (() => {
+                let d = 0;
+                let current = el;
+                while (current && current.parentElement) {
+                    d += 1;
+                    current = current.parentElement;
+                }
+                return d;
+            })();
 
             return {
                 shortName: `${tag}${idPart}${cls}`,
-                detailHtml: `<strong>${tag}${idPart}${cls}</strong><br>Role: ${role} | Atributos: ${attrs} | Hijos: ${childCount}<br>Scripts: ${scriptsTotal} (externos: ${externalScripts})`
+                detailHtml: `<strong>${escapeHtml(tag + idPart + cls)}</strong><br>Depth: ${depth} | Role: ${escapeHtml(role)} | Atributos: ${attrs} | Hijos: ${childCount}<br>Scripts: ${scriptsTotal} (externos: ${externalScripts})`
             };
         };
 
@@ -208,7 +530,7 @@
 
         const revealAtPointer = () => {
             if (!xrayState.directed) return;
-            const target = document.elementFromPoint(pointerX, pointerY);
+            const target = findTargetByFilter(pointerX, pointerY);
 
             if (!target || target === host || target === document.documentElement) {
                 hideDirectedXray();
@@ -222,6 +544,7 @@
             }
 
             const meta = describeElement(target);
+            const listenerSignal = getListenerSignals(target);
             xrayLens.style.display = 'block';
             xrayLens.style.left = `${rect.left}px`;
             xrayLens.style.top = `${rect.top}px`;
@@ -233,7 +556,19 @@
             xrayLabel.style.left = `${clamp(pointerX + 16, 8, window.innerWidth - 260)}px`;
             xrayLabel.style.top = `${clamp(pointerY + 16, 8, window.innerHeight - 48)}px`;
 
-            xrayInfo.innerHTML = `<strong>X-Ray Dirigido:</strong> ${meta.detailHtml}`;
+            if (xrayState.mode === 'structure') {
+                setXrayInfo(`<strong>X-Ray Dirigido (Estructura):</strong> ${meta.detailHtml}<br>Señales de interacción: ${listenerSignal.detail}`);
+                return;
+            }
+
+            if (xrayState.mode === 'source') {
+                const snippet = escapeHtml(getSourceSnippet(target));
+                setXrayInfo(`<strong>X-Ray Dirigido (Fuente):</strong><br>${meta.detailHtml}<br>Señales: ${listenerSignal.detail}<br><code>${snippet}</code>`);
+                return;
+            }
+
+            const stats = getScriptsStats();
+            setXrayInfo(`<strong>X-Ray Dirigido (Scripts):</strong><br>${meta.detailHtml}<br>Inline: ${stats.inline} | Externos: ${stats.external} | Module: ${stats.modules}<br>JSON-LD: ${stats.jsonLd} | Iframes: ${stats.iframes} | Meta: ${stats.metas}`);
         };
 
         window.addEventListener('mousemove', (event) => {
@@ -255,11 +590,11 @@
 
             if (!xrayState.directed) {
                 hideDirectedXray();
-                xrayInfo.innerHTML = '<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.';
+                setXrayInfo('<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.');
                 return;
             }
 
-            xrayInfo.innerHTML = '<strong>X-Ray Dirigido activo:</strong> mueve el mouse para revelar tags, jerarquía y scripts visibles sin hacer click.';
+            setXrayInfo('<strong>X-Ray Dirigido activo:</strong> mueve el mouse para revelar tags, jerarquía y scripts visibles sin hacer click.');
             revealAtPointer();
         });
 
@@ -267,16 +602,101 @@
             xrayState.full = !xrayState.full;
             html.classList.toggle('wtb-xray-full', xrayState.full);
             xrayFullBtn.classList.toggle('active', xrayState.full);
+            applyXrayFilterClass();
 
             if (xrayState.full) {
                 const totalNodes = document.getElementsByTagName('*').length;
-                xrayInfo.innerHTML = `<strong>X-Ray Full-Scan:</strong> ${totalNodes} nodos delineados en modo matrix.`;
+                setXrayInfo(`<strong>X-Ray Full-Scan:</strong> ${totalNodes} nodos delineados en modo matrix. Filtro actual: ${xrayState.filter}.`);
                 return;
             }
 
-            xrayInfo.innerHTML = xrayState.directed
+            setXrayInfo(xrayState.directed
                 ? '<strong>X-Ray Dirigido activo:</strong> mueve el mouse para revelar tags, jerarquía y scripts visibles sin hacer click.'
-                : '<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.';
+                : '<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.');
+        });
+
+        xrayModeStructureBtn.addEventListener('click', () => {
+            xrayState.mode = 'structure';
+            updateModeButtons();
+            if (xrayState.directed) revealAtPointer();
+        });
+
+        xrayModeSourceBtn.addEventListener('click', () => {
+            xrayState.mode = 'source';
+            updateModeButtons();
+            if (xrayState.directed) revealAtPointer();
+        });
+
+        xrayModeScriptsBtn.addEventListener('click', () => {
+            xrayState.mode = 'scripts';
+            updateModeButtons();
+            if (xrayState.directed) {
+                revealAtPointer();
+                return;
+            }
+            const stats = getScriptsStats();
+            setXrayInfo(`<strong>Modo Scripts listo:</strong> Inline: ${stats.inline} | Externos: ${stats.external} | Module: ${stats.modules}<br>JSON-LD: ${stats.jsonLd} | Iframes: ${stats.iframes} | Meta: ${stats.metas}`);
+        });
+
+        const applyFilter = (filterName) => {
+            xrayState.filter = filterName;
+            updateFilterButtons();
+            applyXrayFilterClass();
+            refreshAdvancedScans();
+
+            if (xrayState.full) {
+                const totalNodes = document.getElementsByTagName('*').length;
+                setXrayInfo(`<strong>X-Ray Full-Scan:</strong> ${totalNodes} nodos delineados. Filtro activo: ${xrayState.filter}.`);
+                return;
+            }
+
+            if (xrayState.directed) {
+                revealAtPointer();
+                return;
+            }
+
+            setXrayInfo(`<strong>Filtro X-Ray:</strong> ${xrayState.filter}. Activa Dirigido o Full-Scan para visualizar resultados.`);
+        };
+
+        const refreshAdvancedScans = () => {
+            if (xrayState.heatmap) applyHeatmap(); else clearHeatmap();
+            if (xrayState.listeners) applyListenerMap(); else clearListenerMap();
+        };
+
+        xrayFilterAllBtn.addEventListener('click', () => applyFilter('all'));
+        xrayFilterInteractiveBtn.addEventListener('click', () => applyFilter('interactive'));
+        xrayFilterFormsBtn.addEventListener('click', () => applyFilter('forms'));
+        xrayFilterMediaBtn.addEventListener('click', () => applyFilter('media'));
+
+        xrayHeatmapBtn.addEventListener('click', () => {
+            xrayState.heatmap = !xrayState.heatmap;
+            xrayHeatmapBtn.classList.toggle('active', xrayState.heatmap);
+            refreshAdvancedScans();
+            if (xrayState.heatmap) {
+                setXrayInfo('<strong>Heatmap activo:</strong> contornos graduados por profundidad y densidad del DOM.');
+            } else if (!xrayState.listeners && !xrayState.directed && !xrayState.full) {
+                setXrayInfo('<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.');
+            }
+        });
+
+        xrayListenersBtn.addEventListener('click', () => {
+            xrayState.listeners = !xrayState.listeners;
+            xrayListenersBtn.classList.toggle('active', xrayState.listeners);
+            if (xrayState.listeners) {
+                const flagged = applyListenerMap();
+                setXrayInfo(`<strong>Listener-Map activo:</strong> ${flagged} nodos resaltados con señales de interacción/eventos.`);
+                return;
+            }
+            clearListenerMap();
+            if (!xrayState.heatmap && !xrayState.directed && !xrayState.full) {
+                setXrayInfo('<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.');
+            }
+        });
+
+        xrayExportBtn.addEventListener('click', () => {
+            exportXrayReport();
+            const report = buildXrayReport();
+            setXrayInfo(`<strong>Export JSON completado:</strong> ${report.metrics.totalNodes} nodos, ${report.metrics.listenerCandidates} candidatos a eventos.`);
         });
 
         // Advanced Filters state

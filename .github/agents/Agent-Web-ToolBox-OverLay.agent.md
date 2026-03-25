@@ -156,6 +156,14 @@ let state = {
 - NUNCA alert() o console.error() alarmista.
 - Fallbacks automáticos.
 
+**Para funcionalidades X-Ray avanzadas:**
+- Mantén compatibilidad total con modos previos (`Dirigido`, `Full-Scan`) al agregar sub-opciones.
+- Favorece inspección visual no destructiva: overlays, contornos y paneles informativos.
+- Usa `requestAnimationFrame` en inspección por puntero para mantener FPS estables.
+- Agrega filtros por categorías (`UI`, `Forms`, `Media`) reutilizando selectores claros y mantenibles.
+- Si exportas reportes, usa JSON local vía Blob (sin telemetría ni conexiones externas).
+- Mantén límites de seguridad: no implementar extracción de secretos, credenciales o datos privados.
+
 ## ✅ DESPUÉS de Codear
 
 1. **Prueba Cross-Site:** News, redes sociales, e-commerce, blogs.
