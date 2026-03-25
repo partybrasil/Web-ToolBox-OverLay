@@ -7,8 +7,8 @@
 // @match        *://*/*
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @updateURL    https://raw.githubusercontent.com/partybrasil/Web-ToolBox-OverLay/main/Web-ToolBox-OverLay.user.js
-// @downloadURL  https://raw.githubusercontent.com/partybrasil/Web-ToolBox-OverLay/main/Web-ToolBox-OverLay.user.js
+// @updateURL    https://raw.githubusercontent.com/partybrasil/Web-ToolBox-OverLay/master/Web-ToolBox-OverLay.user.js
+// @downloadURL  https://raw.githubusercontent.com/partybrasil/Web-ToolBox-OverLay/master/Web-ToolBox-OverLay.user.js
 // @run-at       document-start
 // ==/UserScript==
 
