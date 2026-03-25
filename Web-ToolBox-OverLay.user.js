@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Web-ToolBox-OverLay
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.5
 // @description  Herramienta de accesibilidad total premium, gratuita y personalizable. Menú flotante asilado mediante Shadow DOM.
 // @author       Miguel Diaz (Party)
 // @match        *://*/*
@@ -26,6 +26,9 @@
             .wtb-big-cursor * { cursor: inherit !important; }
             .wtb-hide-images img, .wtb-hide-images video, .wtb-hide-images svg, .wtb-hide-images picture { visibility: hidden !important; opacity: 0 !important; }
             .wtb-stop-animations * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+            .wtb-xray-full { background-color: rgba(0, 24, 0, 0.08) !important; }
+            .wtb-xray-full * { outline: 1px solid rgba(57, 255, 20, 0.45) !important; outline-offset: -1px !important; }
+            .wtb-xray-full img, .wtb-xray-full video, .wtb-xray-full canvas, .wtb-xray-full svg { filter: grayscale(100%) sepia(60%) hue-rotate(50deg) saturate(180%) brightness(1.05) !important; }
         `;
         document.documentElement.appendChild(style);
     };
@@ -70,6 +73,11 @@
             
             .reset-btn { width: 100%; background: #ffeb3b; border: 1px solid #fbc02d; color: #3e2723; font-weight: bold; padding: 12px; border-radius: 10px; font-size: 14px; cursor: pointer; transition: 0.2s; }
             .reset-btn:hover { background: #fbc02d; }
+
+            #xray-lens { position: fixed; pointer-events: none; z-index: 2147483646; display: none; border: 2px solid rgba(57, 255, 20, 0.95); border-radius: 6px; box-shadow: 0 0 0 1px rgba(12, 28, 12, 0.9), 0 0 16px rgba(57, 255, 20, 0.55), inset 0 0 24px rgba(12, 68, 12, 0.32); background: linear-gradient(135deg, rgba(57, 255, 20, 0.08), rgba(0, 255, 160, 0.06)); }
+            #xray-label { position: fixed; pointer-events: none; z-index: 2147483646; display: none; padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(57, 255, 20, 0.8); background: rgba(3, 18, 3, 0.94); color: #95ff95; font-size: 12px; font-weight: 700; max-width: min(70vw, 420px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .xray-panel-info { background: #071307; color: #83ff9d; border: 1px solid #1d6a2b; border-radius: 10px; font-size: 12px; line-height: 1.4; padding: 10px; margin-bottom: 20px; min-height: 58px; }
+            .xray-panel-info strong { color: #b5ffb5; }
             
             /* Responsive adjust for mobile */
             @media (max-width: 400px) {
@@ -114,6 +122,15 @@
                     <button class="btn" id="btn-cursor" title="Agrandar el cursor del ratón">🖱️ Cursor XL</button>
                     <button class="btn" id="btn-anim" title="Detener animaciones y transiciones">🚫 Anims</button>
                 </div>
+
+                <div class="section-title">X-Ray Matrix</div>
+                <div class="grid">
+                    <button class="btn" id="btn-xray-directed" title="Inspección en vivo sin click siguiendo el puntero">🧪 Dirigido</button>
+                    <button class="btn" id="btn-xray-full" title="Escaneo total con contornos X-Ray en toda la página">🟩 Full-Scan</button>
+                </div>
+                <div class="xray-panel-info" id="xray-info">
+                    <strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.
+                </div>
                 
                 <div class="section-title">Ajustes del Menú ⚙️</div>
                 <div class="slider-group">
@@ -123,12 +140,19 @@
                 
                 <button class="reset-btn" onclick="location.reload()">🔄 Reestablecer Todo</button>
             </div>
+            <div id="xray-lens"></div>
+            <div id="xray-label"></div>
         `;
         shadow.appendChild(container);
 
         const icon = shadow.getElementById('floating-icon');
         const panel = shadow.getElementById('main-panel');
         const html = document.documentElement;
+        const xrayLens = shadow.getElementById('xray-lens');
+        const xrayLabel = shadow.getElementById('xray-label');
+        const xrayInfo = shadow.getElementById('xray-info');
+        const xrayDirectedBtn = shadow.getElementById('btn-xray-directed');
+        const xrayFullBtn = shadow.getElementById('btn-xray-full');
 
         // Toggle Panel
         icon.addEventListener('click', () => { 
@@ -153,6 +177,107 @@
         toggleClass('btn-cursor', 'wtb-big-cursor');
         toggleClass('btn-images', 'wtb-hide-images');
         toggleClass('btn-anim', 'wtb-stop-animations');
+
+        const xrayState = { directed: false, full: false };
+        let pointerX = 0;
+        let pointerY = 0;
+        let xrayTickScheduled = false;
+
+        const clamp = (value, min, max) => Math.max(min, Math.min(value, max));
+
+        const describeElement = (el) => {
+            const tag = el.tagName ? el.tagName.toLowerCase() : 'desconocido';
+            const idPart = el.id ? `#${el.id}` : '';
+            const cls = el.classList && el.classList.length ? `.${Array.from(el.classList).slice(0, 3).join('.')}` : '';
+            const role = el.getAttribute('role') || '-';
+            const attrs = el.attributes ? el.attributes.length : 0;
+            const childCount = el.children ? el.children.length : 0;
+            const scriptsTotal = document.scripts.length;
+            const externalScripts = Array.from(document.scripts).filter((script) => script.src).length;
+
+            return {
+                shortName: `${tag}${idPart}${cls}`,
+                detailHtml: `<strong>${tag}${idPart}${cls}</strong><br>Role: ${role} | Atributos: ${attrs} | Hijos: ${childCount}<br>Scripts: ${scriptsTotal} (externos: ${externalScripts})`
+            };
+        };
+
+        const hideDirectedXray = () => {
+            xrayLens.style.display = 'none';
+            xrayLabel.style.display = 'none';
+        };
+
+        const revealAtPointer = () => {
+            if (!xrayState.directed) return;
+            const target = document.elementFromPoint(pointerX, pointerY);
+
+            if (!target || target === host || target === document.documentElement) {
+                hideDirectedXray();
+                return;
+            }
+
+            const rect = target.getBoundingClientRect();
+            if (rect.width < 2 || rect.height < 2) {
+                hideDirectedXray();
+                return;
+            }
+
+            const meta = describeElement(target);
+            xrayLens.style.display = 'block';
+            xrayLens.style.left = `${rect.left}px`;
+            xrayLens.style.top = `${rect.top}px`;
+            xrayLens.style.width = `${rect.width}px`;
+            xrayLens.style.height = `${rect.height}px`;
+
+            xrayLabel.style.display = 'block';
+            xrayLabel.textContent = meta.shortName;
+            xrayLabel.style.left = `${clamp(pointerX + 16, 8, window.innerWidth - 260)}px`;
+            xrayLabel.style.top = `${clamp(pointerY + 16, 8, window.innerHeight - 48)}px`;
+
+            xrayInfo.innerHTML = `<strong>X-Ray Dirigido:</strong> ${meta.detailHtml}`;
+        };
+
+        window.addEventListener('mousemove', (event) => {
+            if (!xrayState.directed) return;
+            pointerX = event.clientX;
+            pointerY = event.clientY;
+
+            if (xrayTickScheduled) return;
+            xrayTickScheduled = true;
+            window.requestAnimationFrame(() => {
+                xrayTickScheduled = false;
+                revealAtPointer();
+            });
+        }, { passive: true });
+
+        xrayDirectedBtn.addEventListener('click', () => {
+            xrayState.directed = !xrayState.directed;
+            xrayDirectedBtn.classList.toggle('active', xrayState.directed);
+
+            if (!xrayState.directed) {
+                hideDirectedXray();
+                xrayInfo.innerHTML = '<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.';
+                return;
+            }
+
+            xrayInfo.innerHTML = '<strong>X-Ray Dirigido activo:</strong> mueve el mouse para revelar tags, jerarquía y scripts visibles sin hacer click.';
+            revealAtPointer();
+        });
+
+        xrayFullBtn.addEventListener('click', () => {
+            xrayState.full = !xrayState.full;
+            html.classList.toggle('wtb-xray-full', xrayState.full);
+            xrayFullBtn.classList.toggle('active', xrayState.full);
+
+            if (xrayState.full) {
+                const totalNodes = document.getElementsByTagName('*').length;
+                xrayInfo.innerHTML = `<strong>X-Ray Full-Scan:</strong> ${totalNodes} nodos delineados en modo matrix.`;
+                return;
+            }
+
+            xrayInfo.innerHTML = xrayState.directed
+                ? '<strong>X-Ray Dirigido activo:</strong> mueve el mouse para revelar tags, jerarquía y scripts visibles sin hacer click.'
+                : '<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.';
+        });
 
         // Advanced Filters state
         let state = { inv: false, gray: false };
