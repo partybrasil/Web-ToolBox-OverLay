@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Web-ToolBox-OverLay
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      1.6
 // @description  Herramienta de accesibilidad total premium, gratuita y personalizable. Menú flotante asilado mediante Shadow DOM.
 // @author       Miguel Diaz (Party)
 // @match        *://*/*
@@ -57,6 +57,36 @@
             .wtb-xray-full.wtb-xray-filter-media iframe { outline: 2px solid rgba(57, 255, 20, 0.95) !important; background-color: rgba(57, 255, 20, 0.07) !important; }
             .wtb-xray-heatmap [data-wtb-xray-heat="1"] { outline: 2px solid var(--wtb-xray-heat, rgba(57, 255, 20, 0.9)) !important; background-color: var(--wtb-xray-fill, rgba(57, 255, 20, 0.08)) !important; }
             .wtb-xray-listener-map [data-wtb-xray-listener="1"] { outline: 2px dashed rgba(0, 255, 157, 0.95) !important; background-color: rgba(0, 255, 157, 0.08) !important; }
+            /* === SKELETON MODE 1: WIREFRAME DOM === */
+            .wtb-skel-wireframe body *:not(#web-toolbox-root) { background-image: none !important; background-color: #f4f4f4 !important; color: rgba(80,80,80,0.18) !important; text-shadow: none !important; box-shadow: none !important; border-color: #e0e0e0 !important; border-radius: 0 !important; outline: 1px dashed rgba(190,190,190,0.55) !important; outline-offset: -1px !important; filter: none !important; animation: none !important; transition: none !important; }
+            .wtb-skel-wireframe img, .wtb-skel-wireframe video, .wtb-skel-wireframe canvas { filter: grayscale(100%) brightness(1.2) opacity(0.18) !important; background-color: #e8e8e8 !important; min-width: 20px !important; min-height: 20px !important; }
+            .wtb-skel-wireframe a, .wtb-skel-wireframe button, .wtb-skel-wireframe [role="button"] { outline: 2px solid rgba(63,81,181,0.65) !important; background-color: rgba(197,202,233,0.45) !important; }
+            .wtb-skel-wireframe input, .wtb-skel-wireframe select, .wtb-skel-wireframe textarea { outline: 2px solid rgba(46,125,50,0.65) !important; background-color: rgba(200,230,201,0.45) !important; }
+            /* === SKELETON MODE 2: FLUJO SEMÁNTICO === */
+            .wtb-skel-semantic header { outline: 3px solid #e53935 !important; outline-offset: 3px !important; background-color: rgba(229,57,53,0.06) !important; }
+            .wtb-skel-semantic nav { outline: 3px solid #8e24aa !important; outline-offset: 3px !important; background-color: rgba(142,36,170,0.06) !important; }
+            .wtb-skel-semantic main { outline: 3px solid #1e88e5 !important; outline-offset: 3px !important; background-color: rgba(30,136,229,0.06) !important; }
+            .wtb-skel-semantic section { outline: 2px solid #00897b !important; outline-offset: 2px !important; background-color: rgba(0,137,123,0.05) !important; }
+            .wtb-skel-semantic article { outline: 2px solid #43a047 !important; outline-offset: 2px !important; background-color: rgba(67,160,71,0.05) !important; }
+            .wtb-skel-semantic aside { outline: 3px solid #fb8c00 !important; outline-offset: 3px !important; background-color: rgba(251,140,0,0.05) !important; }
+            .wtb-skel-semantic footer { outline: 3px solid #795548 !important; outline-offset: 3px !important; background-color: rgba(121,85,72,0.06) !important; }
+            .wtb-skel-semantic form { outline: 2px solid #00acc1 !important; outline-offset: 2px !important; background-color: rgba(0,172,193,0.05) !important; }
+            .wtb-skel-semantic [data-wtb-skel-sem] { position: relative !important; }
+            .wtb-skel-semantic [data-wtb-skel-sem]::before { content: attr(data-wtb-skel-sem) !important; position: absolute !important; top: 0 !important; left: 0 !important; font-size: 10px !important; font-weight: 700 !important; color: #fff !important; background-color: var(--wtb-sem-bg, #607d8b) !important; padding: 2px 6px !important; z-index: 99998 !important; border-radius: 0 0 4px 0 !important; font-family: monospace, sans-serif !important; white-space: nowrap !important; line-height: 1.4 !important; pointer-events: none !important; box-shadow: none !important; text-shadow: none !important; }
+            .wtb-skel-semantic header[data-wtb-skel-sem] { --wtb-sem-bg: #e53935; }
+            .wtb-skel-semantic nav[data-wtb-skel-sem] { --wtb-sem-bg: #8e24aa; }
+            .wtb-skel-semantic main[data-wtb-skel-sem] { --wtb-sem-bg: #1e88e5; }
+            .wtb-skel-semantic section[data-wtb-skel-sem] { --wtb-sem-bg: #00897b; }
+            .wtb-skel-semantic article[data-wtb-skel-sem] { --wtb-sem-bg: #43a047; }
+            .wtb-skel-semantic aside[data-wtb-skel-sem] { --wtb-sem-bg: #fb8c00; }
+            .wtb-skel-semantic footer[data-wtb-skel-sem] { --wtb-sem-bg: #795548; }
+            .wtb-skel-semantic form[data-wtb-skel-sem] { --wtb-sem-bg: #00acc1; }
+            /* === SKELETON MODE 3: MAPA DE DENSIDAD === */
+            .wtb-skel-density [data-wtb-skel-depth="0"] { outline: 2px solid rgba(76,175,80,0.85) !important; background-color: rgba(76,175,80,0.06) !important; }
+            .wtb-skel-density [data-wtb-skel-depth="1"] { outline: 2px solid rgba(139,195,74,0.85) !important; background-color: rgba(139,195,74,0.06) !important; }
+            .wtb-skel-density [data-wtb-skel-depth="2"] { outline: 2px solid rgba(255,193,7,0.85) !important; background-color: rgba(255,193,7,0.06) !important; }
+            .wtb-skel-density [data-wtb-skel-depth="3"] { outline: 2px solid rgba(255,87,34,0.85) !important; background-color: rgba(255,87,34,0.06) !important; }
+            .wtb-skel-density [data-wtb-skel-depth="4"] { outline: 2px solid rgba(198,40,40,0.85) !important; background-color: rgba(198,40,40,0.07) !important; }
         `;
         document.documentElement.appendChild(style);
     };
@@ -217,6 +247,12 @@
                     <button class="btn xray-mini" id="btn-xray-listeners" title="Resalta nodos con señales de interacción/eventos">🎯 Listener-Map</button>
                     <button class="btn xray-mini" id="btn-xray-export" title="Exportar reporte técnico X-Ray en JSON">💾 Export JSON</button>
                 </div>
+                <div class="xray-subtitle">Modo Esqueleto</div>
+                <div class="xray-grid-3">
+                    <button class="btn xray-mini" id="btn-xray-skel-wireframe" title="Wireframe DOM: convierte la web en maqueta estructural con texto velado, media desvanecida e interactivos marcados">🧱 Wireframe</button>
+                    <button class="btn xray-mini" id="btn-xray-skel-semantic" title="Flujo Semántico: resalta landmarks HTML5 (header, nav, main, section…) con colores y etiquetas flotantes">🏷️ Semántico</button>
+                    <button class="btn xray-mini" id="btn-xray-skel-density" title="Mapa de Densidad: colorea cada nodo según su profundidad en el árbol DOM (verde→amarillo→rojo)">🌡️ Densidad</button>
+                </div>
                 <div class="xray-panel-info" id="xray-info">
                     <strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.
                 </div>
@@ -248,6 +284,9 @@
         const xrayHeatmapBtn = shadow.getElementById('btn-xray-heatmap');
         const xrayListenersBtn = shadow.getElementById('btn-xray-listeners');
         const xrayExportBtn = shadow.getElementById('btn-xray-export');
+        const skelWireframeBtn = shadow.getElementById('btn-xray-skel-wireframe');
+        const skelSemanticBtn = shadow.getElementById('btn-xray-skel-semantic');
+        const skelDensityBtn = shadow.getElementById('btn-xray-skel-density');
 
         // Toggle Panel
         icon.addEventListener('click', () => {
@@ -294,7 +333,7 @@
         toggleClass('btn-images', 'wtb-hide-images');
         toggleClass('btn-anim', 'wtb-stop-animations');
 
-        const xrayState = { directed: false, full: false, mode: 'structure', filter: 'all', heatmap: false, listeners: false };
+        const xrayState = { directed: false, full: false, mode: 'structure', filter: 'all', heatmap: false, listeners: false, skeleton: null };
         let pointerX = 0;
         let pointerY = 0;
         let xrayTickScheduled = false;
@@ -478,6 +517,74 @@
             URL.revokeObjectURL(url);
         };
 
+        // === SKELETON MODES ===
+        const clearSkeleton = () => {
+            html.classList.remove('wtb-skel-wireframe', 'wtb-skel-semantic', 'wtb-skel-density');
+            document.querySelectorAll('[data-wtb-skel-sem]').forEach((el) => el.removeAttribute('data-wtb-skel-sem'));
+            document.querySelectorAll('[data-wtb-skel-depth]').forEach((el) => el.removeAttribute('data-wtb-skel-depth'));
+            xrayState.skeleton = null;
+        };
+
+        const applySkeletonWireframe = () => {
+            clearSkeleton();
+            xrayState.skeleton = 'wireframe';
+            html.classList.add('wtb-skel-wireframe');
+            const total = document.querySelectorAll('body *').length;
+            setXrayInfo(`<strong>🧱 Wireframe DOM:</strong> ${total} nodos en modo maqueta. Texto velado, media desvanecida.<br>Interactivos en <span style="color:#3f51b5">■ azul</span> · Formularios en <span style="color:#2e7d32">■ verde</span>.`);
+        };
+
+        const applySkeletonSemantic = () => {
+            clearSkeleton();
+            xrayState.skeleton = 'semantic';
+            const semanticConfig = [
+                { tag: 'header',  label: '⬆ header'  },
+                { tag: 'nav',     label: '🧭 nav'     },
+                { tag: 'main',    label: '🏠 main'    },
+                { tag: 'section', label: '§ section'  },
+                { tag: 'article', label: '📝 article' },
+                { tag: 'aside',   label: '💡 aside'   },
+                { tag: 'footer',  label: '⬇ footer'  },
+                { tag: 'form',    label: '📋 form'    }
+            ];
+            const counts = {};
+            semanticConfig.forEach(({ tag, label }) => {
+                const nodes = document.querySelectorAll(tag);
+                counts[tag] = nodes.length;
+                nodes.forEach((el) => {
+                    if (el === host || host.contains(el)) return;
+                    el.setAttribute('data-wtb-skel-sem', label);
+                });
+            });
+            html.classList.add('wtb-skel-semantic');
+            const found = Object.entries(counts).filter(([, n]) => n > 0);
+            const legend = `<span style="color:#e53935">■</span>header <span style="color:#8e24aa">■</span>nav <span style="color:#1e88e5">■</span>main <span style="color:#00897b">■</span>section <span style="color:#43a047">■</span>article <span style="color:#fb8c00">■</span>aside <span style="color:#795548">■</span>footer <span style="color:#00acc1">■</span>form`;
+            const summary = found.length > 0
+                ? found.map(([tag, n]) => `${tag}:${n}`).join(' · ')
+                : 'No se encontraron landmarks semánticos.';
+            setXrayInfo(`<strong>🏷️ Flujo Semántico:</strong> ${legend}<br>${summary}`);
+        };
+
+        const applySkeletonDensity = () => {
+            clearSkeleton();
+            xrayState.skeleton = 'density';
+            const nodes = Array.from(document.querySelectorAll('body *'));
+            nodes.forEach((el) => {
+                if (el === host || host.contains(el)) return;
+                // Profundidad relativa desde body
+                let depth = 0;
+                let current = el;
+                while (current && current !== document.body && current.parentElement) {
+                    depth++;
+                    current = current.parentElement;
+                }
+                // Agrupar en 5 niveles: 0-2→0, 3-5→1, 6-8→2, 9-11→3, 12+→4
+                const bucket = Math.min(Math.floor(depth / 3), 4);
+                el.setAttribute('data-wtb-skel-depth', String(bucket));
+            });
+            html.classList.add('wtb-skel-density');
+            setXrayInfo(`<strong>🌡️ Mapa de Densidad:</strong> ${nodes.length} nodos coloreados por profundidad DOM.<br><span style="color:#4caf50">■</span> 1-3 &nbsp;<span style="color:#8bc34a">■</span> 4-6 &nbsp;<span style="color:#ffc107">■</span> 7-9 &nbsp;<span style="color:#ff5722">■</span> 10-12 &nbsp;<span style="color:#c62828">■</span> 13+ niveles`);
+        };
+
         const applyXrayFilterClass = () => {
             html.classList.remove('wtb-xray-filter-interactive', 'wtb-xray-filter-forms', 'wtb-xray-filter-media');
             if (xrayState.filter === 'interactive') html.classList.add('wtb-xray-filter-interactive');
@@ -496,6 +603,12 @@
             xrayFilterInteractiveBtn.classList.toggle('active', xrayState.filter === 'interactive');
             xrayFilterFormsBtn.classList.toggle('active', xrayState.filter === 'forms');
             xrayFilterMediaBtn.classList.toggle('active', xrayState.filter === 'media');
+        };
+
+        const updateSkelButtons = () => {
+            skelWireframeBtn.classList.toggle('active', xrayState.skeleton === 'wireframe');
+            skelSemanticBtn.classList.toggle('active', xrayState.skeleton === 'semantic');
+            skelDensityBtn.classList.toggle('active', xrayState.skeleton === 'density');
         };
 
         const describeElement = (el) => {
@@ -697,6 +810,39 @@
             exportXrayReport();
             const report = buildXrayReport();
             setXrayInfo(`<strong>Export JSON completado:</strong> ${report.metrics.totalNodes} nodos, ${report.metrics.listenerCandidates} candidatos a eventos.`);
+        });
+
+        skelWireframeBtn.addEventListener('click', () => {
+            if (xrayState.skeleton === 'wireframe') {
+                clearSkeleton();
+                updateSkelButtons();
+                setXrayInfo('<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.');
+                return;
+            }
+            applySkeletonWireframe();
+            updateSkelButtons();
+        });
+
+        skelSemanticBtn.addEventListener('click', () => {
+            if (xrayState.skeleton === 'semantic') {
+                clearSkeleton();
+                updateSkelButtons();
+                setXrayInfo('<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.');
+                return;
+            }
+            applySkeletonSemantic();
+            updateSkelButtons();
+        });
+
+        skelDensityBtn.addEventListener('click', () => {
+            if (xrayState.skeleton === 'density') {
+                clearSkeleton();
+                updateSkelButtons();
+                setXrayInfo('<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.');
+                return;
+            }
+            applySkeletonDensity();
+            updateSkelButtons();
         });
 
         // Advanced Filters state
