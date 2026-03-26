@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Web-ToolBox-OverLay
 // @namespace    http://tampermonkey.net/
-// @version      2.0
-// @description  Herramienta de accesibilidad total premium, gratuita, personalizable y de código abierto. Menú flotante asilado mediante Shadow DOM.
+// @version      1.5
+// @description  Herramienta de accesibilidad total premium, gratuita y personalizable. Menú flotante asilado mediante Shadow DOM.
 // @author       Miguel Diaz (Party)
 // @match        *://*/*
 // @grant        GM_setValue
@@ -19,22 +19,13 @@
         const style = document.createElement('style');
         style.id = 'wtb-global-styles';
         style.textContent = `
-            .wtb-font-dyslexic * { font-family: 'Comic Sans MS', 'Trebuchet MS', sans-serif !important; letter-spacing: 0.1em !important; line-height: 1.5 !important; }
+            .wtb-font-dyslexic * { font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important; letter-spacing: 0.1em !important; line-height: 1.5 !important; }
             .wtb-high-contrast * { background-color: #000 !important; color: #fff !important; border-color: #fff !important; }
             .wtb-highlight-links a { outline: 4px solid #ffeb3b !important; background: #000 !important; color: #fff !important; text-decoration: underline !important; font-weight: bold !important; padding: 2px !important; }
             .wtb-big-cursor { cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24"><path d="M7 2l12 11.2l-5.8 1l3.3 5.8l-2.2 1.3l-3.3-5.8l-4 3.5V2z" fill="black" stroke="white" stroke-width="1"/></svg>'), auto !important; }
-            .wtb-cursor-xl { cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 24 24"><path d="M7 2l12 11.2l-5.8 1l3.3 5.8l-2.2 1.3l-3.3-5.8l-4 3.5V2z" fill="black" stroke="white" stroke-width="1"/></svg>'), auto !important; }
-            .wtb-cursor-xxl { cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24"><path d="M7 2l12 11.2l-5.8 1l3.3 5.8l-2.2 1.3l-3.3-5.8l-4 3.5V2z" fill="black" stroke="white" stroke-width="1"/></svg>'), auto !important; }
             .wtb-big-cursor * { cursor: inherit !important; }
-            .wtb-cursor-xl *, .wtb-cursor-xxl * { cursor: inherit !important; }
             .wtb-hide-images img, .wtb-hide-images video, .wtb-hide-images svg, .wtb-hide-images picture { visibility: hidden !important; opacity: 0 !important; }
             .wtb-stop-animations * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-            .wtb-focus-highlight *:focus, .wtb-focus-highlight *:focus-visible { outline: 4px solid #ff9800 !important; outline-offset: 2px !important; }
-            .wtb-reading-mask * { opacity: 0.35 !important; }
-            .wtb-reading-mask [data-wtb-reading-active="1"], .wtb-reading-mask [data-wtb-reading-active="1"] * { opacity: 1 !important; }
-            .wtb-reading-guide { position: fixed; left: 0; width: 100vw; height: 54px; background: rgba(255, 235, 59, 0.2); border-top: 1px solid rgba(255, 193, 7, 0.9); border-bottom: 1px solid rgba(255, 193, 7, 0.9); pointer-events: none; z-index: 2147483645; display: none; }
-            .wtb-reading-guide.show { display: block; }
-            .wtb-highlight-headings h1, .wtb-highlight-headings h2, .wtb-highlight-headings h3, .wtb-highlight-headings h4, .wtb-highlight-headings h5, .wtb-highlight-headings h6 { background: #1a1a1a !important; color: #ffeb3b !important; outline: 2px dashed #ffeb3b !important; }
             .wtb-xray-full { background-color: rgba(0, 24, 0, 0.08) !important; }
             .wtb-xray-full * { outline: 1px solid rgba(57, 255, 20, 0.45) !important; outline-offset: -1px !important; }
             .wtb-xray-full img, .wtb-xray-full video, .wtb-xray-full canvas, .wtb-xray-full svg { filter: grayscale(100%) sepia(60%) hue-rotate(50deg) saturate(180%) brightness(1.05) !important; }
@@ -66,8 +57,6 @@
             .wtb-xray-full.wtb-xray-filter-media iframe { outline: 2px solid rgba(57, 255, 20, 0.95) !important; background-color: rgba(57, 255, 20, 0.07) !important; }
             .wtb-xray-heatmap [data-wtb-xray-heat="1"] { outline: 2px solid var(--wtb-xray-heat, rgba(57, 255, 20, 0.9)) !important; background-color: var(--wtb-xray-fill, rgba(57, 255, 20, 0.08)) !important; }
             .wtb-xray-listener-map [data-wtb-xray-listener="1"] { outline: 2px dashed rgba(0, 255, 157, 0.95) !important; background-color: rgba(0, 255, 157, 0.08) !important; }
-            .wtb-xray-a11y-map [data-wtb-a11y-error="true"] { outline: 3px solid #ff3b30 !important; outline-offset: 2px !important; background-color: rgba(255, 59, 48, 0.15) !important; }
-            .wtb-xray-a11y-map [data-wtb-a11y-warn="true"] { outline: 3px solid #ffcc00 !important; outline-offset: 2px !important; background-color: rgba(255, 204, 0, 0.15) !important; }
         `;
         document.documentElement.appendChild(style);
     };
@@ -140,22 +129,6 @@
             .xray-mini { font-size: 11px; padding: 8px 6px; }
             code { display: inline-block; margin-top: 6px; font-size: 11px; color: #8effaf; white-space: pre-wrap; word-break: break-word; }
             
-            
-            #secret-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(500px, 90vw); max-height: 80vh; background: #111; color: #0f0; font-family: monospace; border: 2px solid #0f0; border-radius: 12px; box-shadow: 0 0 30px rgba(0,255,0,0.4); padding: 20px; z-index: 2147483647; overflow-y: auto; }
-            #secret-panel h2 { color: #fff; text-transform: uppercase; margin-top: 0; text-align: center; border-bottom: 1px dashed #0f0; padding-bottom: 10px; }
-            .cheat-item { margin-bottom: 15px; background: rgba(0, 255, 0, 0.1); padding: 10px; border-left: 4px solid #0f0; }
-            .cheat-combo { background: #000; color: #fff; padding: 3px 6px; border-radius: 4px; font-weight: bold; margin-right: 10px; display: inline-block; margin-bottom: 5px; }
-            .secret-close { position: absolute; top: 10px; right: 15px; color: #0f0; background: none; border: none; font-size: 20px; cursor: pointer; }
-            .secret-close:hover { color: #fff; }
-            
-            
-            #secret-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(500px, 90vw); max-height: 80vh; background: #111; color: #0f0; font-family: monospace; border: 2px solid #0f0; border-radius: 12px; box-shadow: 0 0 30px rgba(0,255,0,0.4); padding: 20px; z-index: 2147483647; overflow-y: auto; }
-            #secret-panel h2 { color: #fff; text-transform: uppercase; margin-top: 0; text-align: center; border-bottom: 1px dashed #0f0; padding-bottom: 10px; }
-            .cheat-item { margin-bottom: 15px; background: rgba(0, 255, 0, 0.1); padding: 10px; border-left: 4px solid #0f0; }
-            .cheat-combo { background: #000; color: #fff; padding: 3px 6px; border-radius: 4px; font-weight: bold; margin-right: 10px; display: inline-block; margin-bottom: 5px; }
-            .secret-close { position: absolute; top: 10px; right: 15px; color: #0f0; background: none; border: none; font-size: 20px; cursor: pointer; }
-            .secret-close:hover { color: #fff; }
-            
             /* Responsive adjust for mobile */
             @media (max-width: 400px) {
                 #main-panel { width: 280px; position: fixed; bottom: 80px; right: 10px; left: auto; }
@@ -185,60 +158,20 @@
                     <button class="btn" id="btn-images" title="Ocultar todas las imágenes y vídeos">🖼️ Sin Media</button>
                 </div>
                 
-                <div class="section-title">Perfiles Rápidos</div>
-                <div class="grid">
-                    <button class="btn" id="profile-vision" title="Perfil para baja visión">👁️ Baja Visión</button>
-                    <button class="btn" id="profile-cognitive" title="Perfil cognitivo para lectura cómoda">🧠 Cognitivo</button>
-                    <button class="btn" id="profile-keyboard" title="Perfil centrado en navegación por teclado">⌨️ Teclado</button>
-                    <button class="btn" id="profile-motion" title="Perfil para reducir movimiento">🛑 Sin Movimiento</button>
-                </div>
-
                 <div class="section-title">Lectura y Texto</div>
                 <div class="slider-group">
                     <label><span>🔍 Tamaño de fuente</span> <span id="text-val">100%</span></label>
                     <input type="range" id="range-text" min="80" max="300" step="10" value="100">
                 </div>
-                <div class="slider-group">
-                    <label><span>↕️ Altura de línea</span> <span id="line-height-val">1.4</span></label>
-                    <input type="range" id="range-line-height" min="1" max="2.4" step="0.1" value="1.4">
-                </div>
-                <div class="slider-group">
-                    <label><span>↔️ Espaciado letras</span> <span id="letter-spacing-val">0px</span></label>
-                    <input type="range" id="range-letter-spacing" min="0" max="8" step="0.5" value="0">
-                </div>
                 <div class="grid">
                     <button class="btn" id="btn-links" title="Resaltar todos los enlaces">🔗 Enlaces</button>
                     <button class="btn" id="btn-dys" title="Cambiar fuente para facilitar lectura (Dislexia)">📖 Dislexia</button>
-                    <button class="btn" id="btn-headings" title="Resaltar encabezados">🧷 Títulos</button>
-                    <button class="btn" id="btn-reading-guide" title="Guía horizontal para lectura">📏 Guía</button>
                 </div>
                 
                 <div class="section-title">Navegación</div>
                 <div class="grid">
                     <button class="btn" id="btn-cursor" title="Agrandar el cursor del ratón">🖱️ Cursor XL</button>
                     <button class="btn" id="btn-anim" title="Detener animaciones y transiciones">🚫 Anims</button>
-                    <button class="btn" id="btn-focus" title="Resaltado fuerte del foco de teclado">🎯 Foco</button>
-                    <button class="btn" id="btn-skip-links" title="Crear enlaces de salto accesibles">⏭️ Skip Links</button>
-                </div>
-
-                <div class="section-title">Audio y Voz</div>
-                <div class="grid">
-                    <button class="btn" id="btn-tts-selection" title="Leer en voz alta la selección">🔊 Leer selección</button>
-                    <button class="btn" id="btn-tts-page" title="Leer bloques de texto visibles de la página">🗣️ Leer página</button>
-                    <button class="btn" id="btn-tts-pause" title="Pausar o reanudar lectura">⏯️ Pausar/Reanudar</button>
-                    <button class="btn" id="btn-tts-stop" title="Detener lectura">⏹️ Detener</button>
-                </div>
-                <div class="slider-group">
-                    <label><span>🎛️ Velocidad TTS</span> <span id="tts-rate-val">1.0x</span></label>
-                    <input type="range" id="range-tts-rate" min="0.5" max="2" step="0.1" value="1">
-                </div>
-
-                <div class="section-title">Idioma e Import/Export</div>
-                <div class="grid">
-                    <button class="btn" id="btn-lang-es" title="Panel en Español">🇪🇸 ES</button>
-                    <button class="btn" id="btn-lang-en" title="Panel in English">🇺🇸 EN</button>
-                    <button class="btn" id="btn-export-settings" title="Exportar configuración en JSON">💾 Exportar</button>
-                    <button class="btn" id="btn-import-settings" title="Importar configuración desde JSON">📂 Importar</button>
                 </div>
 
                 <div class="section-title">X-Ray Matrix</div>
@@ -250,11 +183,7 @@
                     <input type="range" id="icon-size" min="36" max="100" step="2" value="${GM_getValue('iconSize', 48)}">
                 </div>
                 
-                <div class="grid">
-                    <button class="btn" id="btn-reset-reading" title="Reiniciar solo ajustes de lectura">♻️ Reset Lectura</button>
-                    <button class="btn" id="btn-reset-visual" title="Reiniciar solo ajustes visuales">♻️ Reset Visual</button>
-                </div>
-                <button class="reset-btn" id="btn-reset-all">🔄 Reestablecer Todo</button>
+                <button class="reset-btn" onclick="location.reload()">🔄 Reestablecer Todo</button>
             </div>
             <div id="xray-workbench">
                 <div class="header">
@@ -283,10 +212,9 @@
                     <button class="btn xray-mini" id="btn-xray-filter-media" title="Solo media e iframes">🖼️ Media</button>
                 </div>
                 <div class="xray-subtitle">Escaneo avanzado</div>
-                <div class="xray-grid-4">
+                <div class="xray-grid-3">
                     <button class="btn xray-mini" id="btn-xray-heatmap" title="Mapa térmico por densidad y profundidad del DOM">♨️ Heatmap</button>
                     <button class="btn xray-mini" id="btn-xray-listeners" title="Resalta nodos con señales de interacción/eventos">🎯 Listener-Map</button>
-                    <button class="btn xray-mini" id="btn-xray-a11y" title="Auditoría de Accesibilidad (WCAG básica)">🚨 Auditoría A11y</button>
                     <button class="btn xray-mini" id="btn-xray-export" title="Exportar reporte técnico X-Ray en JSON">💾 Export JSON</button>
                 </div>
                 <div class="xray-panel-info" id="xray-info">
@@ -295,34 +223,6 @@
             </div>
             <div id="xray-lens"></div>
             <div id="xray-label"></div>
-            <div id="reading-guide" class="wtb-reading-guide"></div>
-            
-            
-            <input type="file" id="settings-import-input" accept="application/json" style="display:none">
-            
-            <div id="secret-panel">
-                <button class="secret-close" id="btn-secret-close">✖</button>
-                <h2>🕹️ Guía de Secretos y Combos</h2>
-                <p style="text-align:center; font-size:12px; color:#aaa;">(Teclea estas secuencias en cualquier parte de la web)</p>
-                <div class="cheat-item"><span class="cheat-combo">↑ ↑ ↓ ↓ ← → ← → B A</span><div><strong>Modo Konami:</strong> El botón flotante dará un giro épico.</div></div>
-                <div class="cheat-item"><span class="cheat-combo">R O L L</span><div><strong>Do a Barrel Roll:</strong> La página web completará un giro de 360 grados al instante.</div></div>
-                <div class="cheat-item"><span class="cheat-combo">D R O P</span><div><strong>Caos Gravitatorio:</strong> Todos los elementos perderán su anclaje y caerán al fondo (Usa recargar para arreglar).</div></div>
-                <div class="cheat-item"><span class="cheat-combo">N E O M</span><div><strong>Matrix Mode:</strong> La página web entera se convertirá temporalmente en código verde de Matrix puro.</div></div>
-                <div class="cheat-item"><span class="cheat-combo">C A T S</span><div><strong>Gatitos:</strong> Transforma todas las imágenes de la página instantáneamente en fotos de gatos rescatados (Vía placekitten).</div></div>
-            </div>
-
-            
-            <div id="secret-panel">
-                <button class="secret-close" id="btn-secret-close">✖</button>
-                <h2>🕹️ Guía de Secretos y Combos</h2>
-                <p style="text-align:center; font-size:12px; color:#aaa;">(Teclea estas secuencias en cualquier parte de la web)</p>
-                <div class="cheat-item"><span class="cheat-combo">↑ ↑ ↓ ↓ ← → ← → B A</span><div><strong>Modo Konami:</strong> El botón flotante dará un giro épico.</div></div>
-                <div class="cheat-item"><span class="cheat-combo">R O L L</span><div><strong>Do a Barrel Roll:</strong> La página web completará un giro de 360 grados al instante.</div></div>
-                <div class="cheat-item"><span class="cheat-combo">D R O P</span><div><strong>Caos Gravitatorio:</strong> Todos los elementos perderán su anclaje y caerán al fondo (Usa recargar para arreglar).</div></div>
-                <div class="cheat-item"><span class="cheat-combo">N E O M</span><div><strong>Matrix Mode:</strong> La página web entera se convertirá temporalmente en código verde de Matrix puro.</div></div>
-                <div class="cheat-item"><span class="cheat-combo">C A T S</span><div><strong>Gatitos:</strong> Transforma todas las imágenes de la página instantáneamente en fotos de gatos rescatados (Vía placekitten).</div></div>
-            </div>
-
         `;
         shadow.appendChild(container);
 
@@ -347,213 +247,7 @@
         const xrayFilterMediaBtn = shadow.getElementById('btn-xray-filter-media');
         const xrayHeatmapBtn = shadow.getElementById('btn-xray-heatmap');
         const xrayListenersBtn = shadow.getElementById('btn-xray-listeners');
-        const xrayA11yBtn = shadow.getElementById('btn-xray-a11y');
         const xrayExportBtn = shadow.getElementById('btn-xray-export');
-        const readingGuideEl = shadow.getElementById('reading-guide');
-        
-        
-        const importInput = shadow.getElementById('settings-import-input');
-        
-        // --- SECRET ENGINE & EASTER EGGS ---
-        const secretPanel = shadow.getElementById('secret-panel');
-        shadow.getElementById('btn-secret-close').addEventListener('click', () => { secretPanel.style.display = 'none'; });
-        
-        // Toggle Panel with Ctrl+Alt+C
-        window.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.altKey && e.code === 'KeyC') {
-                secretPanel.style.display = secretPanel.style.display === 'block' ? 'none' : 'block';
-            }
-        });
-
-        // Key Sequence Detector
-        let keyBuffer = [];
-        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
-        
-        const checkSequence = (targetArr) => {
-            if (keyBuffer.length < targetArr.length) return false;
-            const slice = keyBuffer.slice(-targetArr.length);
-            for (let i = 0; i < targetArr.length; i++) {
-                if (slice[i] !== targetArr[i]) return false;
-            }
-            return true;
-        };
-
-        const globalMatrixStyle = document.createElement('style');
-        
-        window.addEventListener('keydown', (e) => {
-            keyBuffer.push(e.code);
-            if (keyBuffer.length > 20) keyBuffer.shift();
-
-            // 1. Konami Code -> Animate ToolBox Icon
-            if (checkSequence(konamiCode)) {
-                keyBuffer = [];
-                icon.style.transition = 'transform 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-                icon.style.transform = 'rotate(1080deg) scale(1.5)';
-                setTimeout(() => { icon.style.transform = 'rotate(0deg) scale(1)'; }, 2000);
-            }
-
-            // 2. Barrel Roll -> R-O-L-L
-            if (checkSequence(['KeyR', 'KeyO', 'KeyL', 'KeyL'])) {
-                keyBuffer = [];
-                document.body.style.transition = 'transform 2s ease-in-out';
-                document.body.style.transform = 'rotate(360deg)';
-                setTimeout(() => { document.body.style.transition = ''; document.body.style.transform = ''; }, 2000);
-            }
-
-            // 3. Drop / Gravity -> D-R-O-P
-            if (checkSequence(['KeyD', 'KeyR', 'KeyO', 'KeyP'])) {
-                keyBuffer = [];
-                document.querySelectorAll('body *').forEach(el => {
-                    if (el === host || host.contains(el)) return;
-                    if (['DIV','P','IMG','BUTTON','A','SPAN','H1','H2','H3'].includes(el.tagName)) {
-                        el.style.transition = 'transform 1.5s ease-in, opacity 2s';
-                        const fallHeight = window.innerHeight - el.getBoundingClientRect().top;
-                        el.style.transform = 	ranslateY(px) rotate(deg);
-                        el.style.opacity = '0.2';
-                    }
-                });
-            }
-
-            // 4. Matrix -> N-E-O-M
-            if (checkSequence(['KeyN', 'KeyE', 'KeyO', 'KeyM'])) {
-                keyBuffer = [];
-                if (!document.getElementById('wtb-matrix-mode')) {
-                    globalMatrixStyle.id = 'wtb-matrix-mode';
-                    globalMatrixStyle.textContent = 
-                        html, body { background: #000 !important; color: #0f0 !important; font-family: monospace !important; }
-                        * { background: transparent !important; color: #0f0 !important; border-color: #0f0 !important; }
-                        img, video { filter: opacity(0.2) drop-shadow(0 0 0 #0f0) !important; }
-                    ;
-                    document.documentElement.appendChild(globalMatrixStyle);
-                } else {
-                    document.getElementById('wtb-matrix-mode').remove();
-                }
-            }
-
-            // 5. Cats -> C-A-T-S
-            if (checkSequence(['KeyC', 'KeyA', 'KeyT', 'KeyS'])) {
-                keyBuffer = [];
-                document.querySelectorAll('img').forEach(img => {
-                    const w = img.clientWidth || 200;
-                    const h = img.clientHeight || 200;
-                    if (w > 10 && h > 10) {
-                        img.src = https://placekitten.com//;
-                        img.srcset = '';
-                    }
-                });
-            }
-        });
-        // --- END SECRET ENGINE ---
-
-        
-        // --- SECRET ENGINE & EASTER EGGS ---
-        const secretPanel = shadow.getElementById('secret-panel');
-        shadow.getElementById('btn-secret-close').addEventListener('click', () => { secretPanel.style.display = 'none'; });
-        
-        // Toggle Panel with Ctrl+Alt+C
-        window.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.altKey && e.code === 'KeyC') {
-                secretPanel.style.display = secretPanel.style.display === 'block' ? 'none' : 'block';
-            }
-        });
-
-        // Key Sequence Detector
-        let keyBuffer = [];
-        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
-        
-        const checkSequence = (targetArr) => {
-            if (keyBuffer.length < targetArr.length) return false;
-            const slice = keyBuffer.slice(-targetArr.length);
-            for (let i = 0; i < targetArr.length; i++) {
-                if (slice[i] !== targetArr[i]) return false;
-            }
-            return true;
-        };
-
-        const globalMatrixStyle = document.createElement('style');
-        
-        window.addEventListener('keydown', (e) => {
-            keyBuffer.push(e.code);
-            if (keyBuffer.length > 20) keyBuffer.shift();
-
-            // 1. Konami Code -> Animate ToolBox Icon
-            if (checkSequence(konamiCode)) {
-                keyBuffer = [];
-                icon.style.transition = 'transform 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-                icon.style.transform = 'rotate(1080deg) scale(1.5)';
-                setTimeout(() => { icon.style.transform = 'rotate(0deg) scale(1)'; }, 2000);
-            }
-
-            // 2. Barrel Roll -> R-O-L-L
-            if (checkSequence(['KeyR', 'KeyO', 'KeyL', 'KeyL'])) {
-                keyBuffer = [];
-                document.body.style.transition = 'transform 2s ease-in-out';
-                document.body.style.transform = 'rotate(360deg)';
-                setTimeout(() => { document.body.style.transition = ''; document.body.style.transform = ''; }, 2000);
-            }
-
-            // 3. Drop / Gravity -> D-R-O-P
-            if (checkSequence(['KeyD', 'KeyR', 'KeyO', 'KeyP'])) {
-                keyBuffer = [];
-                document.querySelectorAll('body *').forEach(el => {
-                    if (el === host || host.contains(el)) return;
-                    if (['DIV','P','IMG','BUTTON','A','SPAN','H1','H2','H3'].includes(el.tagName)) {
-                        el.style.transition = 'transform 1.5s ease-in, opacity 2s';
-                        const fallHeight = window.innerHeight - el.getBoundingClientRect().top;
-                        el.style.transform = 	ranslateY(px) rotate(deg);
-                        el.style.opacity = '0.2';
-                    }
-                });
-            }
-
-            // 4. Matrix -> N-E-O-M
-            if (checkSequence(['KeyN', 'KeyE', 'KeyO', 'KeyM'])) {
-                keyBuffer = [];
-                if (!document.getElementById('wtb-matrix-mode')) {
-                    globalMatrixStyle.id = 'wtb-matrix-mode';
-                    globalMatrixStyle.textContent = 
-                        html, body { background: #000 !important; color: #0f0 !important; font-family: monospace !important; }
-                        * { background: transparent !important; color: #0f0 !important; border-color: #0f0 !important; }
-                        img, video { filter: opacity(0.2) drop-shadow(0 0 0 #0f0) !important; }
-                    ;
-                    document.documentElement.appendChild(globalMatrixStyle);
-                } else {
-                    document.getElementById('wtb-matrix-mode').remove();
-                }
-            }
-
-            // 5. Cats -> C-A-T-S
-            if (checkSequence(['KeyC', 'KeyA', 'KeyT', 'KeyS'])) {
-                keyBuffer = [];
-                document.querySelectorAll('img').forEach(img => {
-                    const w = img.clientWidth || 200;
-                    const h = img.clientHeight || 200;
-                    if (w > 10 && h > 10) {
-                        img.src = https://placekitten.com//;
-                        img.srcset = '';
-                    }
-                });
-            }
-        });
-        // --- END SECRET ENGINE ---
-
-
-        const state = {
-            inv: false,
-            gray: false,
-            textSize: Number(GM_getValue('wtb_textSize', 100)),
-            lineHeight: Number(GM_getValue('wtb_lineHeight', 1.4)),
-            letterSpacing: Number(GM_getValue('wtb_letterSpacing', 0)),
-            ttsRate: Number(GM_getValue('wtb_ttsRate', 1)),
-            lang: String(GM_getValue('wtb_lang', 'es')),
-            readingGuide: false,
-            readingMask: false,
-            focusHighlight: false,
-            skipLinks: false,
-            headingsHighlight: false,
-            cursorMode: 'off',
-            activeProfile: ''
-        };
 
         // Toggle Panel
         icon.addEventListener('click', () => {
@@ -596,12 +290,11 @@
         toggleClass('btn-dys', 'wtb-font-dyslexic');
         toggleClass('btn-contrast', 'wtb-high-contrast');
         toggleClass('btn-links', 'wtb-highlight-links');
+        toggleClass('btn-cursor', 'wtb-big-cursor');
         toggleClass('btn-images', 'wtb-hide-images');
         toggleClass('btn-anim', 'wtb-stop-animations');
-        toggleClass('btn-headings', 'wtb-highlight-headings');
-        toggleClass('btn-focus', 'wtb-focus-highlight');
 
-        const xrayState = { directed: false, full: false, mode: 'structure', filter: 'all', heatmap: false, listeners: false, a11y: false };
+        const xrayState = { directed: false, full: false, mode: 'structure', filter: 'all', heatmap: false, listeners: false };
         let pointerX = 0;
         let pointerY = 0;
         let xrayTickScheduled = false;
@@ -725,63 +418,6 @@
             return flagged;
         };
 
-                const getA11yViolations = (el) => {
-            if (!el || !el.tagName) return { state: 'ok', msg: '' };
-            const tag = el.tagName.toLowerCase();
-            
-            // Critical Errors
-            if (tag === 'img' && !el.hasAttribute('alt')) return { state: 'error', msg: 'IMG sin alt' };
-            if (tag === 'img' && el.getAttribute('alt') === '') return { state: 'warn', msg: 'IMG con alt vacío' };
-            if ((tag === 'button' || tag === 'a') && (!el.innerText || !el.innerText.trim()) && !el.getAttribute('aria-label') && !el.getAttribute('title') && (!el.children.length || !Array.from(el.children).some(c => c.tagName.toLowerCase() === 'svg' || (c.tagName.toLowerCase() === 'img' && c.getAttribute('alt'))))) {
-                return { state: 'error', msg: tag.toUpperCase() + ' sin etiqueta accesible' };
-            }
-            if (tag === 'input') {
-                const type = el.getAttribute('type') || 'text';
-                if (!['submit', 'button', 'reset', 'hidden'].includes(type) && !el.getAttribute('aria-label') && !el.getAttribute('title') && (!el.id || !document.querySelector('label[for="' + el.id + '"]')) && !el.closest('label')) {
-                    return { state: 'error', msg: 'INPUT sin label asociado' };
-                }
-            }
-            if (tag === 'html' && !el.getAttribute('lang')) return { state: 'error', msg: 'HTML sin atributo lang' };
-            
-            // Warnings
-            if (tag === 'a' && el.getAttribute('href') === '#') return { state: 'warn', msg: 'Enlace con href=\"#\"' };
-            if (el.hasAttribute('tabindex') && parseInt(el.getAttribute('tabindex')) > 0) return { state: 'warn', msg: 'tabindex > 0 interfiere con el orden natural' };
-
-            return { state: 'ok', msg: '' };
-        };
-
-        const clearA11yMap = () => {
-            document.querySelectorAll('[data-wtb-a11y-error="true"], [data-wtb-a11y-warn="true"]').forEach((node) => {
-                node.removeAttribute('data-wtb-a11y-error');
-                node.removeAttribute('data-wtb-a11y-warn');
-                node.removeAttribute('title');
-            });
-            html.classList.remove('wtb-xray-a11y-map');
-        };
-
-        const applyA11yMap = () => {
-            clearA11yMap();
-            const nodes = Array.from(document.querySelectorAll('body *, html'));
-            let errors = 0;
-            let warns = 0;
-
-            nodes.forEach((node) => {
-                if (node === host || host.contains(node)) return;
-                const check = getA11yViolations(node);
-                if (check.state === 'error') {
-                    node.setAttribute('data-wtb-a11y-error', 'true');
-                    node.setAttribute('title', '🚨 ' + check.msg);
-                    errors += 1;
-                } else if (check.state === 'warn') {
-                    node.setAttribute('data-wtb-a11y-warn', 'true');
-                    node.setAttribute('title', '⚠️ ' + check.msg);
-                    warns += 1;
-                }
-            });
-            html.classList.add('wtb-xray-a11y-map');
-            return { errors, warns };
-        };
-
         const getTopTags = () => {
             const counts = {};
             document.querySelectorAll('body *').forEach((el) => {
@@ -822,15 +458,6 @@
                     formsNodes: document.querySelectorAll('form,input,select,textarea,label,fieldset').length,
                     mediaNodes: document.querySelectorAll('img,video,audio,canvas,svg,picture,iframe').length,
                     listenerCandidates,
-                    a11yIssues: (() => {
-                        let e = 0, w = 0;
-                        Array.from(document.querySelectorAll('body *, html')).forEach(n => {
-                            if (n === host || host.contains(n)) return;
-                            const c = getA11yViolations(n);
-                            if (c.state === 'error') e++; else if (c.state === 'warn') w++;
-                        });
-                        return { errors: e, warns: w };
-                    })(),
                     scripts: stats
                 },
                 topTags: getTopTags()
@@ -1034,7 +661,6 @@
         const refreshAdvancedScans = () => {
             if (xrayState.heatmap) applyHeatmap(); else clearHeatmap();
             if (xrayState.listeners) applyListenerMap(); else clearListenerMap();
-            if (xrayState.a11y) applyA11yMap(); else clearA11yMap();
         };
 
         xrayFilterAllBtn.addEventListener('click', () => applyFilter('all'));
@@ -1048,7 +674,7 @@
             refreshAdvancedScans();
             if (xrayState.heatmap) {
                 setXrayInfo('<strong>Heatmap activo:</strong> contornos graduados por profundidad y densidad del DOM.');
-            } else if (!xrayState.listeners && !xrayState.directed && !xrayState.full && !xrayState.a11y) {
+            } else if (!xrayState.listeners && !xrayState.directed && !xrayState.full) {
                 setXrayInfo('<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.');
             }
         });
@@ -1062,22 +688,7 @@
                 return;
             }
             clearListenerMap();
-            if (!xrayState.heatmap && !xrayState.directed && !xrayState.full && !xrayState.a11y) {
-                setXrayInfo('<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.');
-            }
-        });
-
-        
-        xrayA11yBtn.addEventListener('click', () => {
-            xrayState.a11y = !xrayState.a11y;
-            xrayA11yBtn.classList.toggle('active', xrayState.a11y);
-            if (xrayState.a11y) {
-                const results = applyA11yMap();
-                setXrayInfo('<strong>Auditoría A11y:</strong> Detectados ' + results.errors + ' errores críticos y ' + results.warns + ' advertencias WCAG.');
-                return;
-            }
-            clearA11yMap();
-            if (!xrayState.heatmap && !xrayState.directed && !xrayState.full && !xrayState.listeners) {
+            if (!xrayState.heatmap && !xrayState.directed && !xrayState.full) {
                 setXrayInfo('<strong>X-Ray inactivo:</strong> activa un modo para explorar la estructura visible del DOM.');
             }
         });
@@ -1088,7 +699,8 @@
             setXrayInfo(`<strong>Export JSON completado:</strong> ${report.metrics.totalNodes} nodos, ${report.metrics.listenerCandidates} candidatos a eventos.`);
         });
 
-        // Advanced Filters state uses the global 'state' object now
+        // Advanced Filters state
+        let state = { inv: false, gray: false };
         const updateFilters = () => {
             let filters = [];
             if (state.inv) filters.push('invert(1) hue-rotate(180deg)');
@@ -1128,277 +740,8 @@
             panel.style.bottom = `calc(${val}px + 10px)`;
         };
 
-// --- NEW IMPLEMENTATIONS ---
-        // Reading Inputs
-        const rangeLineHeight = shadow.getElementById('range-line-height');
-        const lineHeightVal = shadow.getElementById('line-height-val');
-        rangeLineHeight.oninput = (e) => { 
-            const val = e.target.value;
-            html.style.lineHeight = val; 
-            lineHeightVal.textContent = val;
-            GM_setValue('wtb_lineHeight', val);
-        };
-
-        const rangeLetterSpacing = shadow.getElementById('range-letter-spacing');
-        const letterSpacingVal = shadow.getElementById('letter-spacing-val');
-        rangeLetterSpacing.oninput = (e) => { 
-            const val = e.target.value;
-            html.style.letterSpacing = val + 'px'; 
-            letterSpacingVal.textContent = val + 'px';
-            GM_setValue('wtb_letterSpacing', val);
-        };
-
-        // Reading Guide
-        shadow.getElementById('btn-reading-guide').addEventListener('click', (e) => {
-            state.readingGuide = !state.readingGuide;
-            e.target.classList.toggle('active', state.readingGuide);
-            readingGuideEl.classList.toggle('show', state.readingGuide);
-        });
-        
-        window.addEventListener('mousemove', (e) => {
-            if (state.readingGuide) {
-                readingGuideEl.style.top = (e.clientY - 27) + 'px';
-            }
-        });
-
-        // Multi-state cursor
-        const btnCursor = shadow.getElementById('btn-cursor');
-        btnCursor.addEventListener('click', () => {
-            state.cursorMode = (state.cursorMode === 'off') ? 'xl' : (state.cursorMode === 'xl' ? 'xxl' : 'off');
-            html.classList.remove('wtb-cursor-xl', 'wtb-cursor-xxl');
-            btnCursor.classList.remove('active');
-            
-            if (state.cursorMode === 'xl') {
-                html.classList.add('wtb-cursor-xl');
-                btnCursor.classList.add('active');
-                btnCursor.textContent = '🖱️ Cursor XL';
-            } else if (state.cursorMode === 'xxl') {
-                html.classList.add('wtb-cursor-xxl');
-                btnCursor.classList.add('active');
-                btnCursor.textContent = '🖱️ Cursor XXL';
-            } else {
-                btnCursor.textContent = '🖱️ Cursor Normal';
-            }
-        });
-
-        // Skip Links
-        const skipLinksContainer = document.createElement('div');
-        skipLinksContainer.style.cssText = 'position:fixed; top:0; left:0; width:100%; display:flex; gap:10px; padding:10px; z-index:2147483640; pointer-events:none;';
-        document.body.appendChild(skipLinksContainer);
-
-        shadow.getElementById('btn-skip-links').addEventListener('click', (e) => {
-            state.skipLinks = !state.skipLinks;
-            e.target.classList.toggle('active', state.skipLinks);
-            
-            if (state.skipLinks) {
-                const navLinks = [
-                    { id: 'wtb-skip-main', text: 'Saltar a Principal', target: document.querySelector('main, [role="main"], h1') },
-                    { id: 'wtb-skip-footer', text: 'Saltar al final', target: document.querySelector('footer, [role="contentinfo"]') }
-                ];
-                
-                navLinks.forEach(link => {
-                    if (link.target) {
-                        if (!link.target.id) link.target.id = link.id;
-                        const a = document.createElement('a');
-                        a.href = '#' + link.target.id;
-                        a.textContent = link.text;
-                        a.style.cssText = 'background:#000; color:#fff; padding:10px; text-decoration:none; font-weight:bold; pointer-events:auto; font-size:16px; border:2px solid transparent;';
-                        a.onclick = () => { link.target.tabIndex = -1; link.target.focus(); };
-                        skipLinksContainer.appendChild(a);
-                    }
-                });
-            } else {
-                skipLinksContainer.innerHTML = '';
-            }
-        });
-
-        // TTS
-        let speechSynth = window.speechSynthesis;
-        let ttsUtterance = null;
-        let ttsNodes = [];
-        let ttsIndex = 0;
-
-        const synthSpeak = (text) => {
-            if (speechSynth.speaking) speechSynth.cancel();
-            if (!text.trim()) return;
-            ttsUtterance = new SpeechSynthesisUtterance(text);
-            ttsUtterance.rate = state.ttsRate;
-            ttsUtterance.lang = state.lang;
-            ttsUtterance.onend = () => {
-                if (ttsNodes.length > 0 && ttsIndex < ttsNodes.length - 1) {
-                    ttsIndex++;
-                    synthSpeak(ttsNodes[ttsIndex].innerText || ttsNodes[ttsIndex].textContent);
-                } else {
-                    ttsNodes = [];
-                }
-            };
-            speechSynth.speak(ttsUtterance);
-        };
-
-        const rangeTtsRate = shadow.getElementById('range-tts-rate');
-        const ttsRateVal = shadow.getElementById('tts-rate-val');
-        rangeTtsRate.oninput = (e) => {
-            state.ttsRate = e.target.value;
-            ttsRateVal.textContent = state.ttsRate + 'x';
-            GM_setValue('wtb_ttsRate', state.ttsRate);
-        };
-
-        shadow.getElementById('btn-tts-selection').addEventListener('click', () => {
-            ttsNodes = [];
-            const text = window.getSelection().toString();
-            if (text) synthSpeak(text);
-        });
-
-        shadow.getElementById('btn-tts-page').addEventListener('click', () => {
-            ttsNodes = Array.from(document.querySelectorAll('p, h1, h2, h3, h4, li, article')).filter(el => {
-                const rect = el.getBoundingClientRect();
-                return rect.top >= 0 && rect.top <= window.innerHeight && el.innerText.trim().length > 10;
-            });
-            ttsIndex = 0;
-            if (ttsNodes.length > 0) {
-                synthSpeak(ttsNodes[0].innerText || ttsNodes[0].textContent);
-            }
-        });
-
-        shadow.getElementById('btn-tts-pause').addEventListener('click', () => {
-            if (speechSynth.speaking) {
-                if (speechSynth.paused) speechSynth.resume();
-                else speechSynth.pause();
-            }
-        });
-
-        shadow.getElementById('btn-tts-stop').addEventListener('click', () => {
-            speechSynth.cancel();
-            ttsNodes = [];
-        });
-
-        // Import/Export/Reset
-        shadow.getElementById('btn-export-settings').addEventListener('click', () => {
-            const data = {
-                wtb_textSize: GM_getValue('wtb_textSize', 100),
-                wtb_lineHeight: GM_getValue('wtb_lineHeight', 1.4),
-                wtb_letterSpacing: GM_getValue('wtb_letterSpacing', 0),
-                wtb_ttsRate: GM_getValue('wtb_ttsRate', 1),
-                wtb_lang: GM_getValue('wtb_lang', 'es'),
-                iconSize: GM_getValue('iconSize', 48)
-            };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'wtb-settings.json';
-            a.click();
-            URL.revokeObjectURL(url);
-        });
-
-        shadow.getElementById('btn-import-settings').addEventListener('click', () => {
-            importInput.click();
-        });
-        
-        importInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                try {
-                    const data = JSON.parse(event.target.result);
-                    for (const [key, value] of Object.entries(data)) {
-                        GM_setValue(key, value);
-                    }
-                    location.reload();
-                } catch(err) {
-                    console.warn("Import error", err);
-                }
-            };
-            reader.readAsText(file);
-        });
-
-        shadow.getElementById('btn-reset-reading').addEventListener('click', () => {
-            rangeText.value = 100; html.style.fontSize = '100%'; textVal.textContent = '100%';
-            rangeLineHeight.value = 1.4; html.style.lineHeight = '1.4'; lineHeightVal.textContent = '1.4';
-            rangeLetterSpacing.value = 0; html.style.letterSpacing = '0px'; letterSpacingVal.textContent = '0px';
-            if (state.readingGuide) shadow.getElementById('btn-reading-guide').click();
-            if (html.classList.contains('wtb-font-dyslexic')) shadow.getElementById('btn-dys').click();
-        });
-
-        shadow.getElementById('btn-reset-visual').addEventListener('click', () => {
-            if (state.inv) shadow.getElementById('btn-invert').click();
-            if (state.gray) shadow.getElementById('btn-gray').click();
-            if (html.classList.contains('wtb-high-contrast')) shadow.getElementById('btn-contrast').click();
-            if (html.classList.contains('wtb-hide-images')) shadow.getElementById('btn-images').click();
-            if (html.classList.contains('wtb-highlight-links')) shadow.getElementById('btn-links').click();
-            if (html.classList.contains('wtb-highlight-headings')) shadow.getElementById('btn-headings').click();
-        });
-
-        shadow.getElementById('btn-reset-all').addEventListener('click', () => {
-            const defaults = ['wtb_textSize', 'wtb_lineHeight', 'wtb_letterSpacing', 'wtb_ttsRate', 'wtb_lang', 'iconSize'];
-            defaults.forEach(k => GM_setValue(k, null));
-            location.reload();
-        });
-
-        // Profiles
-        const activateProfile = (profileName, updates) => {
-            state.activeProfile = profileName;
-            
-            if (updates.dyslexic && !html.classList.contains('wtb-font-dyslexic')) shadow.getElementById('btn-dys').click();
-            if (updates.highContrast && !html.classList.contains('wtb-high-contrast')) shadow.getElementById('btn-contrast').click();
-            if (updates.stopAnims && !html.classList.contains('wtb-stop-animations')) shadow.getElementById('btn-anim').click();
-            if (updates.focus && !html.classList.contains('wtb-focus-highlight')) shadow.getElementById('btn-focus').click();
-            if (updates.headings && !html.classList.contains('wtb-highlight-headings')) shadow.getElementById('btn-headings').click();
-            
-            if (updates.textSize) { rangeText.value = updates.textSize; html.style.fontSize = updates.textSize + '%'; textVal.textContent = updates.textSize + '%'; GM_setValue('wtb_textSize', updates.textSize); }
-            if (updates.lineHeight) { rangeLineHeight.value = updates.lineHeight; html.style.lineHeight = updates.lineHeight; lineHeightVal.textContent = updates.lineHeight; GM_setValue('wtb_lineHeight', updates.lineHeight); }
-        };
-
-        shadow.getElementById('profile-vision').addEventListener('click', () => activateProfile('vision', { highContrast: true, textSize: 150 }));
-        shadow.getElementById('profile-cognitive').addEventListener('click', () => activateProfile('cognitive', { dyslexic: true, headings: true, lineHeight: 1.8 }));
-        shadow.getElementById('profile-keyboard').addEventListener('click', () => activateProfile('keyboard', { focus: true }));
-        shadow.getElementById('profile-motion').addEventListener('click', () => activateProfile('motion', { stopAnims: true }));
-
-        // i18n
-        const i18n = {
-            es: {
-                vision: '👁️ Baja Visión', cognitive: '🧠 Cognitivo', keyboard: '⌨️ Teclado', motion: '🛑 Sin Movimiento',
-                ttsSel: '🔊 Leer selección', ttsPage: '🗣️ Leer página', pt: '🇪🇸 ES'
-            },
-            en: {
-                vision: '👁️ Low Vision', cognitive: '🧠 Cognitive', keyboard: '⌨️ Keyboard', motion: '🛑 Stop Motion',
-                ttsSel: '🔊 Read selection', ttsPage: '🗣️ Read page', pt: '🇺🇸 EN'
-            }
-        };
-        const applyLang = (lang) => {
-            state.lang = lang;
-            GM_setValue('wtb_lang', lang);
-            const dict = i18n[lang] || i18n.es;
-            shadow.getElementById('profile-vision').textContent = dict.vision;
-            shadow.getElementById('profile-cognitive').textContent = dict.cognitive;
-            shadow.getElementById('profile-keyboard').textContent = dict.keyboard;
-            shadow.getElementById('profile-motion').textContent = dict.motion;
-            shadow.getElementById('btn-tts-selection').textContent = dict.ttsSel;
-            shadow.getElementById('btn-tts-page').textContent = dict.ttsPage;
-        };
-        
-        shadow.getElementById('btn-lang-es').addEventListener('click', () => applyLang('es'));
-        shadow.getElementById('btn-lang-en').addEventListener('click', () => applyLang('en'));
-        
-        // Final Setup from State
-        applyLang(state.lang);
-        html.style.fontSize = state.textSize + '%';
-        html.style.lineHeight = state.lineHeight;
-        html.style.letterSpacing = state.letterSpacing + 'px';
-        rangeText.value = state.textSize;
-        textVal.textContent = state.textSize + '%';
-        rangeLineHeight.value = state.lineHeight;
-        lineHeightVal.textContent = state.lineHeight;
-        rangeLetterSpacing.value = state.letterSpacing;
-        letterSpacingVal.textContent = state.letterSpacing + 'px';
-        rangeTtsRate.value = state.ttsRate;
-        ttsRateVal.textContent = state.ttsRate + 'x';
-// --- END NEW IMPLEMENTATIONS ---
-
         // Drag & Drop functionality
         let pos = GM_getValue('toolboxPos', {x: window.innerWidth - 80, y: window.innerHeight - 80});
-
         
         // Safety bounds check for initial position
         pos.x = Math.max(0, Math.min(pos.x, window.innerWidth - icon.offsetWidth));
